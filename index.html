@@ -316,56 +316,56 @@
 
   <div class="nav-section">
     <div class="nav-label">General</div>
-    <a class="nav-item active" onclick="showPage('resumen')">
+    <a class="nav-item active" onclick="showPage('resumen', this)">
       <span class="nav-icon">⚡</span><span>Resumen Ejecutivo</span>
     </a>
-    <a class="nav-item" onclick="showPage('equipo')">
+    <a class="nav-item" onclick="showPage('equipo', this)">
       <span class="nav-icon">👥</span><span>Equipo</span>
     </a>
   </div>
 
   <div class="nav-section">
     <div class="nav-label">Mercado</div>
-    <a class="nav-item" onclick="showPage('entorno')">
+    <a class="nav-item" onclick="showPage('entorno', this)">
       <span class="nav-icon">🌎</span><span>Entorno & Sector</span>
     </a>
-    <a class="nav-item" onclick="showPage('mercado')">
+    <a class="nav-item" onclick="showPage('mercado', this)">
       <span class="nav-icon">📊</span><span>Análisis de Mercado</span>
     </a>
-    <a class="nav-item" onclick="showPage('competencia')">
+    <a class="nav-item" onclick="showPage('competencia', this)">
       <span class="nav-icon">⚔️</span><span>Competencia</span>
     </a>
   </div>
 
   <div class="nav-section">
     <div class="nav-label">Negocio</div>
-    <a class="nav-item" onclick="showPage('modelo')">
+    <a class="nav-item" onclick="showPage('modelo', this)">
       <span class="nav-icon">🧩</span><span>Modelo de Negocio</span>
     </a>
-    <a class="nav-item" onclick="showPage('marketing')">
+    <a class="nav-item" onclick="showPage('marketing', this)">
       <span class="nav-icon">📣</span><span>Plan de Marketing</span>
     </a>
-    <a class="nav-item" onclick="showPage('operaciones')">
+    <a class="nav-item" onclick="showPage('operaciones', this)">
       <span class="nav-icon">⚙️</span><span>Operaciones</span>
     </a>
   </div>
 
   <div class="nav-section">
     <div class="nav-label">Financiero</div>
-    <a class="nav-item" onclick="showPage('organizacion')">
+    <a class="nav-item" onclick="showPage('organizacion', this)">
       <span class="nav-icon">🏢</span><span>Organización</span>
     </a>
-    <a class="nav-item" onclick="showPage('finanzas')">
+    <a class="nav-item" onclick="showPage('finanzas', this)">
       <span class="nav-icon">💰</span><span>Finanzas</span>
     </a>
-    <a class="nav-item" onclick="showPage('riesgos')">
+    <a class="nav-item" onclick="showPage('riesgos', this)">
       <span class="nav-icon">🛡️</span><span>Riesgos</span>
     </a>
   </div>
 
   <div class="nav-section">
     <div class="nav-label">Preparación</div>
-    <a class="nav-item" onclick="showPage('sharktank')" style="border:1px solid rgba(245,166,35,.3);background:rgba(245,166,35,.06);">
+    <a class="nav-item" onclick="showPage('sharktank', this)" style="border:1px solid rgba(245,166,35,.3);background:rgba(245,166,35,.06);">
       <span class="nav-icon">🦈</span><span style="color:var(--accent3);font-weight:600;">Shark Tank Q&A</span>
     </a>
   </div>
@@ -1863,13 +1863,14 @@ function initCharts() {
 </main>
 
 <script>
-// Navigation
-function showPage(id) {
+// Navigation — receives 'this' from onclick so active class works correctly
+function showPage(id, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
-  event.currentTarget.classList.add('active');
-  setTimeout(() => initCharts(), 50);
+  if (el) el.classList.add('active');
+  // Initialize charts for this specific page after it's visible
+  setTimeout(() => initChartsForPage(id), 80);
 }
 
 // Accordion
@@ -1928,80 +1929,82 @@ function searchQA(val) {
   document.getElementById('stEmpty').style.display = anyVisible ? 'none' : 'block';
 }
 
-// Charts
+// Charts — initialize only when the page is visible to avoid canvas sizing issues
 Chart.defaults.color = '#8da0b3';
 Chart.defaults.borderColor = 'rgba(255,255,255,0.07)';
 Chart.defaults.font.family = "'DM Sans', sans-serif";
 
-let chartsInitialized = false;
-function initCharts() {
-  if (chartsInitialized) return;
-  chartsInitialized = true;
+const yrs = ['2026','2027','2028','2029','2030','2031'];
 
-  const yrs = ['2026','2027','2028','2029','2030','2031'];
-
-  const ctxRes = document.getElementById('chartResumen');
-  if (ctxRes) new Chart(ctxRes, {
-    type: 'bar',
-    data: {
-      labels: yrs,
-      datasets: [
-        { label: 'Ventas netas (M COP)', data: [0,404,1823,3528,5181,7467], backgroundColor: 'rgba(34,208,122,.7)', borderRadius: 6 },
-        { label: 'Utilidad neta (M COP)', data: [-21,-76,9,95,101,230], backgroundColor: 'rgba(14,163,212,.7)', borderRadius: 6 },
-      ]
-    },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { boxWidth: 12 } } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } } }
-  });
-
-  const ctxZ = document.getElementById('chartZonas');
-  if (ctxZ) new Chart(ctxZ, {
-    type: 'doughnut',
-    data: {
-      labels: ['Chapinero','Teusaquillo','Usaquén','Centro Hist.','Otras localidades'],
-      datasets: [{ data: [24.03,5.07,14.82,8.96,47.12], backgroundColor: ['#22d07a','#0ea3d4','#f5a623','#c084fc','rgba(255,255,255,0.15)'], borderWidth: 0, hoverOffset: 4 }]
-    },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 10, padding: 12, font: { size: 11 } } } }, cutout: '65%' }
-  });
-
-  const ctxPyL = document.getElementById('chartPyL');
-  if (ctxPyL) new Chart(ctxPyL, {
-    type: 'line',
-    data: {
-      labels: yrs,
-      datasets: [
-        { label: 'Ventas netas', data: [0,404,1823,3528,5181,7467], borderColor: '#22d07a', backgroundColor: 'rgba(34,208,122,.08)', fill: true, tension: .4, pointRadius: 4 },
-        { label: 'Utilidad bruta', data: [0,74,334,626,825,1220], borderColor: '#0ea3d4', backgroundColor: 'rgba(14,163,212,.05)', fill: true, tension: .4, pointRadius: 4 },
-        { label: 'EBIT', data: [-21,-76,13,153,161,358], borderColor: '#f5a623', backgroundColor: 'transparent', tension: .4, pointRadius: 4, borderDash: [4,3] },
-        { label: 'Utilidad neta', data: [-21,-76,9,95,101,230], borderColor: '#c084fc', backgroundColor: 'transparent', tension: .4, pointRadius: 4, borderDash: [2,3] },
-      ]
-    },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { boxWidth: 12, font: { size: 11 } } } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { callback: v => '$' + v + 'M' } }, x: { grid: { display: false } } } }
-  });
-
-  const ctxFC = document.getElementById('chartFlujo');
-  if (ctxFC) new Chart(ctxFC, {
-    type: 'bar',
-    data: {
-      labels: yrs,
-      datasets: [
-        { label: 'Caja final (M COP)', data: [28,14,114,341,447,810], backgroundColor: ['rgba(34,208,122,.7)','rgba(248,96,96,.5)','rgba(34,208,122,.7)','rgba(34,208,122,.7)','rgba(34,208,122,.7)','rgba(34,208,122,.7)'], borderRadius: 6 },
-      ]
-    },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { callback: v => '$' + v + 'M' } }, x: { grid: { display: false } } } }
-  });
-
-  const ctxFin = document.getElementById('chartFinanc');
-  if (ctxFin) new Chart(ctxFin, {
-    type: 'doughnut',
-    data: {
-      labels: ['Equity socios (Mes 0)', 'Equity adicional (Mes 13)', 'Crédito comercial (Mes 26)'],
-      datasets: [{ data: [225,25,30], backgroundColor: ['#22d07a','#0ea3d4','#f5a623'], borderWidth: 0, hoverOffset: 4 }]
-    },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 10, font: { size: 11 } } } }, cutout: '60%' }
-  });
+function makeChart(id, config) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const existing = Chart.getChart(canvas);
+  if (existing) existing.destroy();
+  new Chart(canvas, config);
 }
 
-setTimeout(initCharts, 200);
+function initChartsForPage(id) {
+  if (id === 'resumen') {
+    makeChart('chartResumen', {
+      type: 'bar',
+      data: {
+        labels: yrs,
+        datasets: [
+          { label: 'Ventas netas (M COP)', data: [0,404,1823,3528,5181,7467], backgroundColor: 'rgba(34,208,122,.75)', borderRadius: 6 },
+          { label: 'Utilidad neta (M COP)', data: [-21,-76,9,95,101,230], backgroundColor: 'rgba(14,163,212,.75)', borderRadius: 6 },
+        ]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { boxWidth: 12 } } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } } }
+    });
+  }
+  if (id === 'mercado') {
+    makeChart('chartZonas', {
+      type: 'doughnut',
+      data: {
+        labels: ['Chapinero','Teusaquillo','Usaquén','Centro Hist.','Otras'],
+        datasets: [{ data: [24.03,5.07,14.82,8.96,47.12], backgroundColor: ['#22d07a','#0ea3d4','#f5a623','#c084fc','rgba(255,255,255,0.12)'], borderWidth: 0, hoverOffset: 4 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 10, padding: 12, font: { size: 11 } } } }, cutout: '65%' }
+    });
+  }
+  if (id === 'finanzas') {
+    makeChart('chartPyL', {
+      type: 'line',
+      data: {
+        labels: yrs,
+        datasets: [
+          { label: 'Ventas netas', data: [0,404,1823,3528,5181,7467], borderColor: '#22d07a', backgroundColor: 'rgba(34,208,122,.08)', fill: true, tension: .4, pointRadius: 4 },
+          { label: 'Utilidad bruta', data: [0,74,334,626,825,1220], borderColor: '#0ea3d4', backgroundColor: 'rgba(14,163,212,.05)', fill: true, tension: .4, pointRadius: 4 },
+          { label: 'EBIT', data: [-21,-76,13,153,161,358], borderColor: '#f5a623', backgroundColor: 'transparent', tension: .4, pointRadius: 4, borderDash: [4,3] },
+          { label: 'Utilidad neta', data: [-21,-76,9,95,101,230], borderColor: '#c084fc', backgroundColor: 'transparent', tension: .4, pointRadius: 4, borderDash: [2,3] },
+        ]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { boxWidth: 12, font: { size: 11 } } } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { callback: v => '$' + v + 'M' } }, x: { grid: { display: false } } } }
+    });
+    makeChart('chartFlujo', {
+      type: 'bar',
+      data: {
+        labels: yrs,
+        datasets: [{ label: 'Caja final (M COP)', data: [28,14,114,341,447,810], backgroundColor: ['rgba(34,208,122,.7)','rgba(248,96,96,.5)','rgba(34,208,122,.7)','rgba(34,208,122,.7)','rgba(34,208,122,.7)','rgba(34,208,122,.7)'], borderRadius: 6 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { callback: v => '$' + v + 'M' } }, x: { grid: { display: false } } } }
+    });
+    makeChart('chartFinanc', {
+      type: 'doughnut',
+      data: {
+        labels: ['Equity socios (Mes 0)', 'Equity adicional (Mes 13)', 'Crédito comercial (Mes 26)'],
+        datasets: [{ data: [225,25,30], backgroundColor: ['#22d07a','#0ea3d4','#f5a623'], borderWidth: 0, hoverOffset: 4 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 10, font: { size: 11 } } } }, cutout: '60%' }
+    });
+  }
+}
+
+// Load resumen chart on first paint
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => initChartsForPage('resumen'), 150);
+});
 </script>
 </body>
 </html>
