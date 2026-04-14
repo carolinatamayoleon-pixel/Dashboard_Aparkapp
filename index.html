@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AparkApp — Plan de Negocios</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0f14;
+    --bg2: #111820;
+    --bg3: #162130;
+    --accent: #22d07a;
+    --accent2: #0ea3d4;
+    --accent3: #f5a623;
+    --text: #e8edf2;
+    --text2: #8da0b3;
+    --border: rgba(255,255,255,0.07);
+    --card: rgba(255,255,255,0.04);
+    --card-hover: rgba(255,255,255,0.07);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 14px; line-height: 1.6; min-height: 100vh; display: flex; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 230px; min-width: 230px; background: var(--bg2);
+    border-right: 1px solid var(--border);
+    position: fixed; top: 0; left: 0; height: 100vh;
+    display: flex; flex-direction: column; z-index: 100;
+    overflow-y: auto;
+  }
+  .sidebar-logo {
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo-mark {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+  }
+  .logo-icon {
+    width: 36px; height: 36px; background: var(--accent);
+    border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 800; font-size: 16px; color: #0a0f14;
+  }
+  .logo-name { font-family: var(--font-display); font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+  .logo-sub { font-size: 11px; color: var(--text2); letter-spacing: 0.5px; text-transform: uppercase; }
+
+  .nav-section { padding: 14px 12px 4px; }
+  .nav-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text2); padding: 0 8px; margin-bottom: 4px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 9px; padding: 8px 10px;
+    border-radius: var(--radius-sm); cursor: pointer; transition: all .15s;
+    color: var(--text2); font-size: 13px; font-weight: 400;
+    text-decoration: none;
+  }
+  .nav-item:hover, .nav-item.active { background: var(--card-hover); color: var(--text); }
+  .nav-item.active { color: var(--accent); }
+  .nav-icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
+
+  /* MAIN */
+  .main { margin-left: 230px; flex: 1; min-height: 100vh; }
+  .page { display: none; padding: 36px 40px; max-width: 1100px; animation: fadeIn .25s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* PAGE HEADER */
+  .page-header { margin-bottom: 32px; }
+  .page-header h1 { font-family: var(--font-display); font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .page-header p { color: var(--text2); font-size: 14px; max-width: 600px; }
+  .tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; letter-spacing: 0.3px; }
+  .tag-green { background: rgba(34,208,122,.15); color: var(--accent); }
+  .tag-blue { background: rgba(14,163,212,.15); color: var(--accent2); }
+  .tag-orange { background: rgba(245,166,35,.15); color: var(--accent3); }
+  .tag-red { background: rgba(248,96,96,.15); color: #f86060; }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .col-span-2 { grid-column: span 2; }
+  .col-span-3 { grid-column: span 3; }
+
+  /* CARD */
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px;
+    transition: background .15s;
+  }
+  .card:hover { background: var(--card-hover); }
+  .card-title { font-family: var(--font-display); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-bottom: 10px; }
+
+  /* KPI */
+  .kpi-val { font-family: var(--font-display); font-size: 30px; font-weight: 800; letter-spacing: -1px; margin-bottom: 2px; }
+  .kpi-val.green { color: var(--accent); }
+  .kpi-val.blue { color: var(--accent2); }
+  .kpi-val.orange { color: var(--accent3); }
+  .kpi-sub { font-size: 12px; color: var(--text2); }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family: var(--font-display); font-size: 15px; font-weight: 700;
+    margin-bottom: 14px; padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+  /* TABLE */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .data-table th { text-align: left; padding: 8px 12px; background: rgba(255,255,255,.04); color: var(--text2); font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 500; border-bottom: 1px solid var(--border); }
+  .data-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: rgba(255,255,255,.02); }
+
+  /* BADGE */
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+  .badge-green { background: rgba(34,208,122,.12); color: var(--accent); }
+  .badge-blue { background: rgba(14,163,212,.12); color: var(--accent2); }
+  .badge-orange { background: rgba(245,166,35,.12); color: var(--accent3); }
+  .badge-red { background: rgba(248,96,96,.12); color: #f86060; }
+  .badge-gray { background: rgba(255,255,255,.07); color: var(--text2); }
+
+  /* FODA */
+  .foda-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 12px; }
+  .foda-cell { padding: 16px; border-radius: var(--radius-sm); }
+  .foda-cell h4 { font-family: var(--font-display); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .foda-cell ul { list-style: none; }
+  .foda-cell ul li { font-size: 12px; padding: 3px 0; color: var(--text2); }
+  .foda-cell ul li::before { content: '→ '; color: inherit; opacity: 0.7; }
+  .foda-f { background: rgba(34,208,122,.08); border: 1px solid rgba(34,208,122,.2); }
+  .foda-f h4 { color: var(--accent); }
+  .foda-d { background: rgba(248,96,96,.08); border: 1px solid rgba(248,96,96,.2); }
+  .foda-d h4 { color: #f86060; }
+  .foda-o { background: rgba(14,163,212,.08); border: 1px solid rgba(14,163,212,.2); }
+  .foda-o h4 { color: var(--accent2); }
+  .foda-a { background: rgba(245,166,35,.08); border: 1px solid rgba(245,166,35,.2); }
+  .foda-a h4 { color: var(--accent3); }
+
+  /* PERSON CARD */
+  .person-card { display: flex; gap: 14px; align-items: flex-start; }
+  .avatar { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 15px; font-weight: 800; flex-shrink: 0; }
+  .person-role { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 2px; }
+  .person-name { font-family: var(--font-display); font-size: 14px; font-weight: 700; margin-bottom: 5px; }
+  .person-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+  /* PROGRESS BAR */
+  .progress-bar { height: 6px; background: rgba(255,255,255,.06); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+  .progress-fill { height: 100%; border-radius: 3px; transition: width .6s ease; }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 24px; }
+  .timeline::before { content: ''; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 1px; background: var(--border); }
+  .timeline-item { position: relative; margin-bottom: 20px; }
+  .timeline-dot { position: absolute; left: -21px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg2); }
+  .timeline-phase { font-size: 11px; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 2px; }
+  .timeline-title { font-family: var(--font-display); font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .timeline-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+  /* CHART CONTAINER */
+  .chart-wrap { position: relative; height: 220px; }
+  .chart-wrap-sm { position: relative; height: 180px; }
+
+  /* INFO ROW */
+  .info-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .info-row:last-child { border-bottom: none; }
+  .info-label { color: var(--text2); }
+  .info-val { font-weight: 500; text-align: right; }
+
+  /* RISK */
+  .risk-item { padding: 12px 14px; border-radius: var(--radius-sm); border-left: 3px solid; margin-bottom: 8px; background: rgba(255,255,255,.03); }
+  .risk-item.high { border-color: #f86060; }
+  .risk-item.med { border-color: var(--accent3); }
+  .risk-item.low { border-color: var(--accent); }
+  .risk-label { font-size: 12px; font-weight: 600; margin-bottom: 3px; }
+  .risk-desc { font-size: 12px; color: var(--text2); }
+
+  /* MARKET FUNNEL */
+  .funnel-item { margin-bottom: 10px; }
+  .funnel-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+  .funnel-bar { height: 28px; border-radius: 4px; display: flex; align-items: center; padding: 0 10px; font-size: 12px; font-weight: 600; }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+  /* SHARK TANK ACCORDION */
+  .st-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+  .st-filter-btn {
+    padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border);
+    background: var(--card); color: var(--text2); font-size: 12px; font-weight: 500;
+    cursor: pointer; transition: all .15s; font-family: var(--font-body);
+  }
+  .st-filter-btn:hover { border-color: rgba(255,255,255,.2); color: var(--text); }
+  .st-filter-btn.active { color: #0a0f14; font-weight: 600; border-color: transparent; }
+  .st-filter-btn.all.active { background: var(--text); }
+  .st-filter-btn.logistica.active { background: var(--accent2); }
+  .st-filter-btn.rrhh.active { background: #c084fc; }
+  .st-filter-btn.marketing.active { background: var(--accent3); }
+  .st-filter-btn.trampa.active { background: #f86060; }
+
+  .st-search {
+    width: 100%; padding: 10px 16px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); background: var(--card);
+    color: var(--text); font-family: var(--font-body); font-size: 13px;
+    margin-bottom: 20px; outline: none; transition: border-color .15s;
+  }
+  .st-search:focus { border-color: rgba(255,255,255,.2); }
+  .st-search::placeholder { color: var(--text2); }
+
+  .qa-group { margin-bottom: 28px; }
+  .qa-group-title {
+    font-family: var(--font-display); font-size: 13px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px; padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .qa-item {
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    margin-bottom: 8px; overflow: hidden; transition: border-color .15s;
+  }
+  .qa-item:hover { border-color: rgba(255,255,255,.15); }
+  .qa-item.open { border-color: rgba(255,255,255,.15); }
+
+  .qa-question {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 12px; padding: 14px 16px; cursor: pointer;
+    background: var(--card); transition: background .15s;
+    user-select: none;
+  }
+  .qa-question:hover { background: var(--card-hover); }
+  .qa-item.open .qa-question { background: rgba(255,255,255,.06); }
+
+  .qa-q-text {
+    font-size: 13px; font-weight: 500; line-height: 1.5; color: var(--text);
+    font-style: italic;
+  }
+  .qa-q-text::before { content: '"'; opacity: .5; }
+  .qa-q-text::after { content: '"'; opacity: .5; }
+
+  .qa-chevron {
+    font-size: 11px; color: var(--text2); flex-shrink: 0; margin-top: 2px;
+    transition: transform .2s;
+  }
+  .qa-item.open .qa-chevron { transform: rotate(180deg); }
+
+  .qa-answer {
+    max-height: 0; overflow: hidden;
+    transition: max-height .35s ease, padding .2s ease;
+    background: rgba(255,255,255,.02);
+  }
+  .qa-item.open .qa-answer { max-height: 600px; }
+  .qa-answer-inner {
+    padding: 0 16px 16px; font-size: 13px; line-height: 1.75; color: var(--text2);
+    border-top: 1px solid var(--border); padding-top: 14px;
+  }
+  .qa-answer-inner strong { color: var(--text); }
+
+  .qa-tip {
+    margin-top: 10px; padding: 10px 12px;
+    border-radius: 6px; font-size: 12px; line-height: 1.6;
+    border-left: 3px solid;
+  }
+  .qa-tip.green { background: rgba(34,208,122,.06); border-color: var(--accent); color: var(--accent); }
+  .qa-tip.orange { background: rgba(245,166,35,.06); border-color: var(--accent3); color: var(--accent3); }
+  .qa-tip.red { background: rgba(248,96,96,.06); border-color: #f86060; color: #f86060; }
+  .qa-tip p { color: var(--text2); margin-top: 2px; }
+
+  .cat-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-right: 6px; flex-shrink: 0;
+  }
+  .cat-log { background: rgba(14,163,212,.15); color: var(--accent2); }
+  .cat-rrhh { background: rgba(192,132,252,.15); color: #c084fc; }
+  .cat-mkt { background: rgba(245,166,35,.15); color: var(--accent3); }
+  .cat-trp { background: rgba(248,96,96,.15); color: #f86060; }
+
+  .st-empty { text-align:center; padding: 40px 20px; color: var(--text2); font-size: 13px; display: none; }
+
+  .mb-4 { margin-bottom: 4px; }
+  .mb-8 { margin-bottom: 8px; }
+  .mb-16 { margin-bottom: 16px; }
+  .mb-24 { margin-bottom: 24px; }
+  .mt-16 { margin-top: 16px; }
+  .text-sm { font-size: 12px; }
+  .text-muted { color: var(--text2); }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .sidebar { width: 56px; min-width: 56px; }
+    .nav-label, .logo-name, .logo-sub, .nav-item span { display: none; }
+    .main { margin-left: 56px; }
+    .page { padding: 20px; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .col-span-2, .col-span-3 { grid-column: span 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <div class="logo-icon">A</div>
+      <span class="logo-name">AparkApp</span>
+    </div>
+    <div class="logo-sub">Plan de Negocios 2026</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">General</div>
+    <a class="nav-item active" onclick="showPage('resumen')">
+      <span class="nav-icon">⚡</span><span>Resumen Ejecutivo</span>
+    </a>
+    <a class="nav-item" onclick="showPage('equipo')">
+      <span class="nav-icon">👥</span><span>Equipo</span>
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Mercado</div>
+    <a class="nav-item" onclick="showPage('entorno')">
+      <span class="nav-icon">🌎</span><span>Entorno & Sector</span>
+    </a>
+    <a class="nav-item" onclick="showPage('mercado')">
+      <span class="nav-icon">📊</span><span>Análisis de Mercado</span>
+    </a>
+    <a class="nav-item" onclick="showPage('competencia')">
+      <span class="nav-icon">⚔️</span><span>Competencia</span>
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Negocio</div>
+    <a class="nav-item" onclick="showPage('modelo')">
+      <span class="nav-icon">🧩</span><span>Modelo de Negocio</span>
+    </a>
+    <a class="nav-item" onclick="showPage('marketing')">
+      <span class="nav-icon">📣</span><span>Plan de Marketing</span>
+    </a>
+    <a class="nav-item" onclick="showPage('operaciones')">
+      <span class="nav-icon">⚙️</span><span>Operaciones</span>
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Financiero</div>
+    <a class="nav-item" onclick="showPage('organizacion')">
+      <span class="nav-icon">🏢</span><span>Organización</span>
+    </a>
+    <a class="nav-item" onclick="showPage('finanzas')">
+      <span class="nav-icon">💰</span><span>Finanzas</span>
+    </a>
+    <a class="nav-item" onclick="showPage('riesgos')">
+      <span class="nav-icon">🛡️</span><span>Riesgos</span>
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Preparación</div>
+    <a class="nav-item" onclick="showPage('sharktank')" style="border:1px solid rgba(245,166,35,.3);background:rgba(245,166,35,.06);">
+      <span class="nav-icon">🦈</span><span style="color:var(--accent3);font-weight:600;">Shark Tank Q&A</span>
+    </a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- ==================== RESUMEN EJECUTIVO ==================== -->
+<div class="page active" id="page-resumen">
+  <div class="page-header">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <span class="tag tag-green">Proyecto Empresarial II — 2026</span>
+      <span class="tag tag-blue">Universidad de La Sabana</span>
+    </div>
+    <h1>Resumen Ejecutivo</h1>
+    <p>Plataforma digital que conecta conductores urbanos con espacios de estacionamiento privados ociosos en Bogotá.</p>
+  </div>
+
+  <div class="grid-4 mb-24">
+    <div class="card">
+      <div class="card-title">Inversión inicial</div>
+      <div class="kpi-val green">$280M</div>
+      <div class="kpi-sub">COP — equity + deuda</div>
+    </div>
+    <div class="card">
+      <div class="card-title">TIR a 5 años</div>
+      <div class="kpi-val blue">50.16%</div>
+      <div class="kpi-sub">WACC: 19.3%</div>
+    </div>
+    <div class="card">
+      <div class="card-title">VPN a 5 años</div>
+      <div class="kpi-val orange">$491M</div>
+      <div class="kpi-sub">COP — valor presente neto</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Comisión core</div>
+      <div class="kpi-val" style="color:#c084fc;">22.5%</div>
+      <div class="kpi-sub">Por reserva completada</div>
+    </div>
+  </div>
+
+  <div class="grid-2 mb-16">
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Problema & Solución</div>
+      <div class="info-row"><span class="info-label">Problema central</span><span class="info-val" style="max-width:55%;text-align:right;">Búsqueda de parqueo ineficiente en zonas de alta congestión</span></div>
+      <div class="info-row"><span class="info-label">Congestión Bogotá 2025</span><span class="info-val"><span class="badge badge-red">69.6%</span></span></div>
+      <div class="info-row"><span class="info-label">Horas perdidas en tráfico</span><span class="info-val">~425 h/año</span></div>
+      <div class="info-row"><span class="info-label">Viajes diarios en auto</span><span class="info-val">2.03 millones</span></div>
+      <div class="info-row"><span class="info-label">Cupos formales Bogotá</span><span class="info-val">304,000</span></div>
+      <div class="info-row"><span class="info-label">Solución</span><span class="info-val" style="max-width:55%;text-align:right;">Marketplace de reserva anticipada de cupos privados ociosos</span></div>
+    </div>
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Métricas clave año 1</div>
+      <div class="info-row"><span class="info-label">Transacciones mes 1</span><span class="info-val">~255 / mes</span></div>
+      <div class="info-row"><span class="info-label">Transacciones mes 12</span><span class="info-val">>3,200 / mes</span></div>
+      <div class="info-row"><span class="info-label">Hosts activos año 1</span><span class="info-val">~188 hosts</span></div>
+      <div class="info-row"><span class="info-label">Precio base reserva</span><span class="info-val">$8,000 COP/h</span></div>
+      <div class="info-row"><span class="info-label">Ingreso neto / reserva</span><span class="info-val">~$3,270 COP</span></div>
+      <div class="info-row"><span class="info-label">Punto de equilibrio</span><span class="info-val"><span class="badge badge-orange">Mes 4</span></span></div>
+    </div>
+  </div>
+
+  <div class="card mb-16">
+    <div class="section-title"><div class="dot"></div>Ingresos proyectados (COP millones)</div>
+    <div class="chart-wrap">
+      <canvas id="chartResumen"></canvas>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Zonas iniciales</div>
+      <div class="info-row"><span class="info-label">Chapinero</span><span class="info-val">10,500 SAM</span></div>
+      <div class="info-row"><span class="info-label">Usaquén</span><span class="info-val">12,556 SAM</span></div>
+      <div class="info-row"><span class="info-label">Teusaquillo</span><span class="info-val">2,783 SAM</span></div>
+      <div class="info-row"><span class="info-label">Centro Histórico</span><span class="info-val">4,981 SAM</span></div>
+    </div>
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Estructura financiación</div>
+      <div class="info-row"><span class="info-label">Equity socios (mes 0)</span><span class="info-val"><span class="badge badge-green">$225M — 80.4%</span></span></div>
+      <div class="info-row"><span class="info-label">Equity adicional (mes 13)</span><span class="info-val">$25M — 8.9%</span></div>
+      <div class="info-row"><span class="info-label">Crédito comercial (mes 26)</span><span class="info-val">$30M — 10.7%</span></div>
+      <div class="info-row"><span class="info-label">Total</span><span class="info-val font-weight:600">$280M</span></div>
+    </div>
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Valor empresa (5 años)</div>
+      <div class="kpi-val green mb-4">$2.77B</div>
+      <div class="kpi-sub mb-16">COP — flujo descontado</div>
+      <div class="info-row"><span class="info-label">Utilidad neta 2031</span><span class="info-val">$230M COP</span></div>
+      <div class="info-row"><span class="info-label">EBITDA 2031</span><span class="info-val">$464M COP</span></div>
+      <div class="info-row"><span class="info-label">Ventas 2031</span><span class="info-val">$7.47B COP</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== EQUIPO ==================== -->
+<div class="page" id="page-equipo">
+  <div class="page-header">
+    <h1>Equipo Emprendedor</h1>
+    <p>Cinco socios fundadores con perfiles complementarios en negocios internacionales, finanzas, marketing y operaciones.</p>
+  </div>
+
+  <div class="grid-2 mb-16">
+    <div class="card">
+      <div class="person-card">
+        <div class="avatar" style="background:rgba(34,208,122,.15);color:var(--accent);">AH</div>
+        <div>
+          <div class="person-role">CEO — Chief Executive Officer</div>
+          <div class="person-name">Astrid Yurley Hernández Gutiérrez</div>
+          <div class="person-desc">Formación en análisis financiero y desarrollo de proyectos emprendedores. Experiencia en investigación de mercados (Reto Alpina, Reto Alianza Team). Conocimientos en marketing digital y campañas geolocalizadas.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="person-card">
+        <div class="avatar" style="background:rgba(14,163,212,.15);color:var(--accent2);">FS</div>
+        <div>
+          <div class="person-role">Head of Supply — Hosts</div>
+          <div class="person-name">Federico Serna Duque</div>
+          <div class="person-desc">Experiencia en ventas B2B, negociación y relaciones con proveedores. Trayectoria en emprendimientos propios/familiares y ventas directas. Formación en liderazgo (U. del Rosario).</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="person-card">
+        <div class="avatar" style="background:rgba(245,166,35,.15);color:var(--accent3);">LA</div>
+        <div>
+          <div class="person-role">Head of Demand — Conductores / Marketing</div>
+          <div class="person-name">Laura Sofía Arcila Valbuena</div>
+          <div class="person-desc">Consultora en investigación de mercados agroindustrial (leche de cabra en Latam). Participación en Reto del Rector (IA en hábitos) y Reto Ramo. Especialista en analítica y análisis del consumidor.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="person-card">
+        <div class="avatar" style="background:rgba(192,132,252,.15);color:#c084fc;">DC</div>
+        <div>
+          <div class="person-role">COO — Chief Operating Officer</div>
+          <div class="person-name">Danna Estefanía Carmona Trujillo</div>
+          <div class="person-desc">Experiencia como PAT en admisiones de Medicina (CRM, bases de datos, atención al usuario). Participación en retos con Crem Helado y Ramo. Competencias en gestión de procesos y riesgos operativos.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-16">
+    <div class="person-card">
+      <div class="avatar" style="background:rgba(34,208,122,.15);color:var(--accent);width:52px;height:52px;font-size:17px;">CT</div>
+      <div>
+        <div class="person-role">CFO — Chief Financial Officer</div>
+        <div class="person-name" style="font-size:16px;">Carolina Tamayo León</div>
+        <div class="person-desc">Graduada en Economía y Finanzas Internacionales. +2 años como monitora de desarrollo económico y programación. Asistente de investigación (U. de Melbourne & Colfuturo). Certificación en Excel avanzado y modelamiento de datos.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title"><div class="dot"></div>Estructura societaria</div>
+    <div class="grid-3" style="gap:12px;margin-top:4px;">
+      <div style="text-align:center;padding:16px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border);">
+        <div style="font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--accent);">5</div>
+        <div class="text-sm text-muted">Socios fundadores</div>
+      </div>
+      <div style="text-align:center;padding:16px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border);">
+        <div style="font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--accent2);">20%</div>
+        <div class="text-sm text-muted">Participación cada socio</div>
+      </div>
+      <div style="text-align:center;padding:16px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border);">
+        <div style="font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--accent3);">S.A.S.</div>
+        <div class="text-sm text-muted">Forma jurídica — Ley 1258/2008</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== ENTORNO ==================== -->
+<div class="page" id="page-entorno">
+  <div class="page-header">
+    <h1>Entorno & Sector</h1>
+    <p>Variables macroeconómicas, barreras de entrada y análisis FODA del ecosistema en el que opera AparkApp.</p>
+  </div>
+
+  <div class="grid-3 mb-16">
+    <div class="card">
+      <div class="card-title">Congestión Bogotá 2025</div>
+      <div class="kpi-val green">69.6%</div>
+      <div class="kpi-sub">▲ 7.7% vs 2024 — 425h perdidas/año en pico</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Nuevos vehículos 2025</div>
+      <div class="kpi-val blue">59K+</div>
+      <div class="kpi-sub">▲ 36% crecimiento anual en Bogotá</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Penetración digital</div>
+      <div class="kpi-val orange">77.8%</div>
+      <div class="kpi-sub">41.7M usuarios de internet en Colombia</div>
+    </div>
+  </div>
+
+  <div class="grid-2 mb-16">
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Sector: Software & TI Colombia</div>
+      <div class="info-row"><span class="info-label">Tamaño del mercado</span><span class="info-val">USD 1,800M+</span></div>
+      <div class="info-row"><span class="info-label">Nivel de madurez</span><span class="info-val"><span class="badge badge-green">Crecimiento</span></span></div>
+      <div class="info-row"><span class="info-label">Posición regional</span><span class="info-val">Hub Latam Software & TI</span></div>
+      <div class="info-row"><span class="info-label">Empresas con transf. digital</span><span class="info-val">76%</span></div>
+      <div class="info-row"><span class="info-label">Salario mínimo 2026</span><span class="info-val">▲ 23.7%</span></div>
+      <div class="info-row"><span class="info-label">Déficit profesionales TI</span><span class="info-val">162,000+</span></div>
+    </div>
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Tarifas parqueo Bogotá 2026</div>
+      <table class="data-table" style="margin-top:4px;">
+        <thead><tr><th>Vehículo</th><th>Fuera de vía</th><th>ZPP</th></tr></thead>
+        <tbody>
+          <tr><td>Carros / camperos / pesados</td><td>$230/min</td><td>$89–$355</td></tr>
+          <tr><td>Motos</td><td>$161/min</td><td>$62–$248</td></tr>
+          <tr><td>Bicicletas</td><td>$10/min</td><td>N/A</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card mb-16">
+    <div class="section-title"><div class="dot"></div>Análisis FODA</div>
+    <div class="foda-grid">
+      <div class="foda-cell foda-f">
+        <h4>Fortalezas</h4>
+        <ul>
+          <li>Innovación y personalización del servicio</li>
+          <li>Modelo escalable sin activos físicos</li>
+          <li>Alta aceptación del mercado</li>
+          <li>Verificación dual usuario-vehículo</li>
+          <li>Pricing dinámico integrado</li>
+        </ul>
+      </div>
+      <div class="foda-cell foda-d">
+        <h4>Debilidades</h4>
+        <ul>
+          <li>Cobertura inicial limitada (2 zonas)</li>
+          <li>Marca nueva sin reconocimiento</li>
+          <li>Dependencia tecnológica (Witrey)</li>
+          <li>Pérdidas en primeros 2 años</li>
+          <li>Equipo fundador sin dedicación 100%</li>
+        </ul>
+      </div>
+      <div class="foda-cell foda-o">
+        <h4>Oportunidades</h4>
+        <ul>
+          <li>Déficit estructural de parqueaderos</li>
+          <li>Crecimiento sostenido del parque automotor</li>
+          <li>Transformación digital acelerada</li>
+          <li>Mercado informal = 75% del total</li>
+          <li>Alta penetración de smartphones</li>
+        </ul>
+      </div>
+      <div class="foda-cell foda-a">
+        <h4>Amenazas</h4>
+        <ul>
+          <li>Nuevos competidores entrantes</li>
+          <li>Competidores consolidados (City Parking)</li>
+          <li>Sustitutos de movilidad urbana</li>
+          <li>Regulación datos personales (SIC)</li>
+          <li>Mejora transporte público</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title"><div class="dot"></div>Barreras de entrada</div>
+    <div class="grid-3" style="gap:12px;margin-top:4px;">
+      <div style="padding:14px;background:rgba(248,96,96,.05);border:1px solid rgba(248,96,96,.15);border-radius:8px;">
+        <div style="color:#f86060;font-weight:700;font-size:13px;margin-bottom:6px;">🔒 Regulatorias</div>
+        <div class="text-sm text-muted">Régimen de protección de datos (SIC), comercio electrónico y operación de plataformas digitales. Multas millonarias por incumplimiento.</div>
+      </div>
+      <div style="padding:14px;background:rgba(245,166,35,.05);border:1px solid rgba(245,166,35,.15);border-radius:8px;">
+        <div style="color:var(--accent3);font-weight:700;font-size:13px;margin-bottom:6px;">💰 Económicas</div>
+        <div class="text-sm text-muted">Déficit de +162K profesionales TI. Salarios especializados elevados. Competencia con freelancers internacionales reduce márgenes.</div>
+      </div>
+      <div style="padding:14px;background:rgba(14,163,212,.05);border:1px solid rgba(14,163,212,.15);border-radius:8px;">
+        <div style="color:var(--accent2);font-weight:700;font-size:13px;margin-bottom:6px;">⚙️ Tecnológicas</div>
+        <div class="text-sm text-muted">Falta de infraestructura adecuada, competencias digitales limitadas en PYMES y dificultad para adaptar procesos digitales complejos.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MERCADO ==================== -->
+<div class="page" id="page-mercado">
+  <div class="page-header">
+    <h1>Análisis de Mercado</h1>
+    <p>TAM-SAM-SOM para conductores y hosts en las zonas iniciales de operación.</p>
+  </div>
+
+  <div class="grid-4 mb-16">
+    <div class="card">
+      <div class="card-title">Automóviles matriculados</div>
+      <div class="kpi-val blue">1.3M</div>
+      <div class="kpi-sub">Bogotá 2023</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Viajes diarios en auto</div>
+      <div class="kpi-val green">2.03M</div>
+      <div class="kpi-sub">Encuesta movilidad 2023</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Viajes con pago estac.</div>
+      <div class="kpi-val orange">213K</div>
+      <div class="kpi-sub">10.48% — $11,466 COP promedio</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Cupos formales</div>
+      <div class="kpi-val" style="color:#c084fc;">304K</div>
+      <div class="kpi-sub">57% fuera de vía</div>
+    </div>
+  </div>
+
+  <div class="grid-2 mb-16">
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>TAM–SAM–SOM Demanda (Usuarios)</div>
+      <table class="data-table">
+        <thead><tr><th>Zona</th><th>SAM</th><th>SOM Cons. (1%)</th><th>SOM Base (3%)</th><th>SOM Opt. (5%)</th></tr></thead>
+        <tbody>
+          <tr><td>Chapinero</td><td>10,500</td><td>105</td><td>315</td><td>525</td></tr>
+          <tr><td>Teusaquillo</td><td>2,783</td><td>28</td><td>84</td><td>139</td></tr>
+          <tr><td>Usaquén</td><td>12,556</td><td>126</td><td>377</td><td>628</td></tr>
+          <tr><td>Centro Hist.</td><td>4,981</td><td>50</td><td>149</td><td>249</td></tr>
+          <tr style="font-weight:600;"><td>TOTAL</td><td>30,820</td><td>309</td><td>925</td><td>1,541</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>TAM–SAM–SOM Oferta (Hosts)</div>
+      <table class="data-table">
+        <thead><tr><th>Zona</th><th>TAM</th><th>SAM</th><th>SOM Cons. (3%)</th><th>SOM Base (6%)</th></tr></thead>
+        <tbody>
+          <tr><td>Chapinero</td><td>29,550</td><td>5,910</td><td>177</td><td>1,773</td></tr>
+          <tr><td>Teusaquillo</td><td>12,530</td><td>2,506</td><td>75</td><td>752</td></tr>
+          <tr><td>Usaquén</td><td>39,390</td><td>7,878</td><td>236</td><td>2,363</td></tr>
+          <tr><td>Centro Hist.</td><td>8,620</td><td>1,724</td><td>52</td><td>517</td></tr>
+          <tr style="font-weight:600;"><td>TOTAL</td><td>90,090</td><td>18,018</td><td>540</td><td>5,405</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card mb-16">
+    <div class="section-title"><div class="dot"></div>Escenarios de transacciones mensuales (SOM)</div>
+    <table class="data-table">
+      <thead>
+        <tr><th>Zona</th><th>Conservador — Oferta</th><th>Conservador — Demanda</th><th>SOM Trans.</th><th>Base — SOM Trans.</th><th>Optimista — SOM Trans.</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Chapinero</td><td>1,552</td><td>3,150</td><td><span class="badge badge-orange">1,552</span></td><td><span class="badge badge-blue">9,450</span></td><td><span class="badge badge-green">15,750</span></td></tr>
+        <tr><td>Teusaquillo</td><td>5,319</td><td>835</td><td><span class="badge badge-orange">835</span></td><td><span class="badge badge-blue">2,505</span></td><td><span class="badge badge-green">4,175</span></td></tr>
+        <tr><td>Usaquén</td><td>7,090</td><td>3,767</td><td><span class="badge badge-orange">3,767</span></td><td><span class="badge badge-blue">11,300</span></td><td><span class="badge badge-green">18,834</span></td></tr>
+        <tr><td>Centro Hist.</td><td>2,255</td><td>1,494</td><td><span class="badge badge-orange">1,494</span></td><td><span class="badge badge-blue">4,483</span></td><td><span class="badge badge-green">7,472</span></td></tr>
+        <tr style="font-weight:600;"><td>TOTAL</td><td>—</td><td>—</td><td>7,648</td><td>27,738</td><td>46,231</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:12px;padding:10px 14px;background:rgba(34,208,122,.06);border-radius:8px;border-left:3px solid var(--accent);">
+      <div class="text-sm" style="color:var(--accent);">💡 Conclusión clave</div>
+      <div class="text-sm text-muted" style="margin-top:4px;">La oferta supera la demanda en todos los escenarios. El crecimiento estará limitado por la <strong style="color:var(--text);">adopción de conductores</strong>, no por la disponibilidad de cupos.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title"><div class="dot"></div>Concentración por zona (viajes pagos)</div>
+    <div class="chart-wrap-sm"><canvas id="chartZonas"></canvas></div>
+  </div>
+</div>
+
+<!-- ==================== COMPETENCIA ==================== -->
+<div class="page" id="page-competencia">
+  <div class="page-header">
+    <h1>Análisis de Competencia</h1>
+    <p>Benchmarking de 6 competidores directos y posicionamiento estratégico de AparkApp.</p>
+  </div>
+
+  <div class="card mb-16">
+    <div class="section-title"><div class="dot"></div>Mapa competitivo</div>
+    <table class="data-table">
+      <thead><tr><th>Competidor</th><th>Tipo</th><th>Modelo</th><th>Segmento</th><th>Diferenciador</th><th>Debilidad</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>City Parking / Indigo</strong></td>
+          <td><span class="badge badge-red">Directo</span></td>
+          <td>Operador B2B</td>
+          <td>Conductores grandes edif.</td>
+          <td>Escala, marca global, 40K cupos</td>
+          <td>Sin reserva casual / PH</td>
+        </tr>
+        <tr>
+          <td><strong>Parking.net.co</strong></td>
+          <td><span class="badge badge-red">Directo</span></td>
+          <td>Suscripción mensual</td>
+          <td>Usuarios frecuentes</td>
+          <td>Parqueaderos tecnificados, app</td>
+          <td>No admite cupos privados</td>
+        </tr>
+        <tr>
+          <td><strong>Ruedaz</strong></td>
+          <td><span class="badge badge-red">Directo</span></td>
+          <td>Red de parqueaderos</td>
+          <td>Trabajo, estudio, comercio</td>
+          <td>100+ aliados, app moderna</td>
+          <td>No cupos PH residencial</td>
+        </tr>
+        <tr>
+          <td><strong>Nidoo</strong></td>
+          <td><span class="badge badge-red">Directo</span></td>
+          <td>Marketplace P2P</td>
+          <td>Conductores flex / jornadas largas</td>
+          <td>DayPass, plan mensual</td>
+          <td>Foco en mensualidad, no por horas</td>
+        </tr>
+        <tr>
+          <td><strong>WheelsHouse</strong></td>
+          <td><span class="badge badge-red">Directo</span></td>
+          <td>Economía colaborativa</td>
+          <td>PH residencial y oficinas</td>
+          <td>Cupos privados, reputación</td>
+          <td>Presencia limitada, menor liquidez</td>
+        </tr>
+        <tr>
+          <td><strong>ZPP Bogotá / Flypass</strong></td>
+          <td><span class="badge badge-red">Directo</span></td>
+          <td>Política pública</td>
+          <td>Corredores comerciales</td>
+          <td>Tarifa regulada, app oficial</td>
+          <td>Solo en vía pública</td>
+        </tr>
+        <tr>
+          <td><strong>Parqueaderos tradicionales</strong></td>
+          <td><span class="badge badge-gray">Indirecto</span></td>
+          <td>Operación física</td>
+          <td>Amplio</td>
+          <td>Ubicuidad, sin app necesaria</td>
+          <td>Sin digitalización, informalidad</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2 mb-16">
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Nicho desatendido de AparkApp</div>
+      <div style="padding:16px;background:rgba(34,208,122,.06);border:1px solid rgba(34,208,122,.2);border-radius:8px;">
+        <div style="color:var(--accent);font-weight:700;font-size:14px;margin-bottom:8px;">🎯 Espacio estratégico</div>
+        <div class="text-sm text-muted" style="line-height:1.7;">
+          Reserva en tiempo real + uso por fracciones cortas de cupos en <strong style="color:var(--text);">propiedades horizontales y viviendas</strong>.<br><br>
+          Ningún competidor ofrece este modelo de forma completa con verificación, seguro integrado y precio transparente.
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:10px 14px;background:rgba(255,255,255,.03);border-radius:8px;">
+        <div class="text-sm text-muted">Parqueaderos formales en Colombia = solo el <strong style="color:var(--accent);">25%</strong> del total. Mercado altamente fragmentado e informal.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Estrategia frente a competidores</div>
+      <div class="info-row"><span class="info-label">City Parking / Indigo</span><span class="info-val"><span class="badge badge-blue">Posible socio</span></span></div>
+      <div class="info-row"><span class="info-label">Nidoo / WheelsHouse</span><span class="info-val"><span class="badge badge-orange">Coexistencia</span></span></div>
+      <div class="info-row"><span class="info-label">Ruedaz / Parking</span><span class="info-val"><span class="badge badge-gray">Diferenciación</span></span></div>
+      <div class="info-row"><span class="info-label">ZPP / Flypass</span><span class="info-val"><span class="badge badge-green">Complementario</span></span></div>
+      <div class="info-row"><span class="info-label">Parqueaderos informales</span><span class="info-val"><span class="badge badge-green">Formalizar</span></span></div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text2);">No es necesario neutralizar la competencia — el mercado es suficientemente grande y fragmentado para estrategias de coexistencia.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title"><div class="dot"></div>Ventajas competitivas diferenciales de AparkApp</div>
+    <div class="grid-3" style="gap:12px;margin-top:4px;">
+      <div style="padding:14px;background:rgba(34,208,122,.05);border:1px solid rgba(34,208,122,.15);border-radius:8px;">
+        <div style="font-size:20px;margin-bottom:8px;">🔐</div>
+        <div style="font-weight:700;font-size:13px;margin-bottom:4px;">Verificación dual</div>
+        <div class="text-sm text-muted">Usuario + vehículo. Sistema de reputación bidireccional host-conductor.</div>
+      </div>
+      <div style="padding:14px;background:rgba(14,163,212,.05);border:1px solid rgba(14,163,212,.15);border-radius:8px;">
+        <div style="font-size:20px;margin-bottom:8px;">🛡️</div>
+        <div style="font-weight:700;font-size:13px;margin-bottom:4px;">Seguro integrado</div>
+        <div class="text-sm text-muted">Póliza RC + fondo de garantía por transacción. Protección hasta $500K COP/evento.</div>
+      </div>
+      <div style="padding:14px;background:rgba(192,132,252,.05);border:1px solid rgba(192,132,252,.15);border-radius:8px;">
+        <div style="font-size:20px;margin-bottom:8px;">💡</div>
+        <div style="font-weight:700;font-size:13px;margin-bottom:4px;">Pricing dinámico</div>
+        <div class="text-sm text-muted">Algoritmo de asignación por proximidad, disponibilidad, reputación y precio en tiempo real.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MODELO DE NEGOCIO ==================== -->
+<div class="page" id="page-modelo">
+  <div class="page-header">
+    <h1>Modelo de Negocio</h1>
+    <p>Marketplace digital de doble cara que conecta oferta de cupos ociosos con demanda de conductores urbanos.</p>
+  </div>
+
+  <div class="grid-2 mb-16">
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Segmentos de clientes</div>
+      <div style="margin-bottom:12px;padding:12px;background:rgba(34,208,122,.06);border-radius:8px;border-left:3px solid var(--accent);">
+        <div style="font-weight:700;font-size:13px;color:var(--accent);margin-bottom:4px;">🚗 Conductores urbanos</div>
+        <div class="text-sm text-muted">Commuters, asistentes a eventos, usuarios de clínicas y universidades. Valoran seguridad, cercanía y transparencia en precio. 213K viajes/día con pago validado.</div>
+      </div>
+      <div style="padding:12px;background:rgba(14,163,212,.06);border-radius:8px;border-left:3px solid var(--accent2);">
+        <div style="font-weight:700;font-size:13px;color:var(--accent2);margin-bottom:4px;">🏢 Anfitriones (Hosts)</div>
+        <div class="text-sm text-muted">Propietarios PH individuales, administraciones de PH y organizaciones con cupos ociosos. Monetizan inventario con control total de reglas y horarios.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Propuesta de valor</div>
+      <div class="info-row"><span class="info-label">Para conductores</span><span class="info-val" style="max-width:55%;text-align:right;">"Sabes dónde vas a parquear antes de salir"</span></div>
+      <div class="info-row"><span class="info-label">Para hosts</span><span class="info-val" style="max-width:55%;text-align:right;">"Tu parqueadero trabaja cuando tú no lo usas"</span></div>
+      <div class="info-row"><span class="info-label">Reserva anticipada</span><span class="info-val"><span class="badge badge-green">✓</span></span></div>
+      <div class="info-row"><span class="info-label">Precios transparentes</span><span class="info-val"><span class="badge badge-green">✓</span></span></div>
+      <div class="info-row"><span class="info-label">Verificación dual</span><span class="info-val"><span class="badge badge-green">✓</span></span></div>
+      <div class="info-row"><span class="info-label">Seguro integrado</span><span class="info-val"><span class="badge badge-green">✓</span></span></div>
+      <div class="info-row"><span class="info-label">Pricing dinámico</span><span class="info-val"><span class="badge badge-green">✓</span></span></div>
+    </div>
+  </div>
+
+  <div class="card mb-16">
+    <div class="section-title"><div class="dot"></div>Fuentes de ingreso — modelo mixto</div>
+    <table class="data-table">
+      <thead><tr><th>Fuente</th><th>Monto</th><th>¿Quién paga?</th><th>Inicio</th><th>Tipo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Comisión por transacción</strong></td><td>22.5% (~$4,500 COP)</td><td>Conductor (deducido del precio)</td><td>Mes 1</td><td><span class="badge badge-green">Variable</span></td></tr>
+        <tr><td>Garantía de reserva</td><td>$500 COP / reserva</td><td>Conductor</td><td>Mes 1</td><td><span class="badge badge-blue">Variable</span></td></tr>
+        <tr><td>Verificación identidad</td><td>$4,900 COP (una vez)</td><td>Conductor y host</td><td>Mes 1</td><td><span class="badge badge-blue">Único</span></td></tr>
+        <tr><td>Cargo no-show</td><td>$10,000 COP</td><td>Conductor (~4% reservas)</td><td>Mes 1</td><td><span class="badge badge-gray">Esporádico</span></td></tr>
+        <tr><td>Cargo overstay</td><td>$4,000 COP/min extra</td><td>Conductor (~8% reservas)</td><td>Mes 1</td><td><span class="badge badge-gray">Esporádico</span></td></tr>
+        <tr><td>Tarifa de servicio</td><td>$800 → $1,200 COP/reserva</td><td>Conductor</td><td>Mes 4 / Mes 7</td><td><span class="badge badge-orange">Variable</span></td></tr>
+        <tr><td>AparkPass (suscripción)</td><td>$9,900/mes o $99,000/año</td><td>Conductores frecuentes</td><td>Mes 9</td><td><span class="badge badge-orange">Recurrente</span></td></tr>
+        <tr><td>Panel B2B</td><td>$200,000 COP/mes/contrato</td><td>PH, clínicas, universidades</td><td>Mes 13</td><td><span class="badge badge-green">Recurrente</span></td></tr>
+      </tbody>
+    </table>
+    <div class="grid-3" style="gap:12px;margin-top:16px;">
+      <div style="text-align:center;padding:14px;background:rgba(34,208,122,.06);border-radius:8px;border:1px solid rgba(34,208,122,.15);">
+        <div style="font-family:var(--font-display);font-size:20px;font-weight:800;color:var(--accent);">16.35%</div>
+        <div class="text-sm text-muted">Margen neto / reserva estándar</div>
+      </div>
+      <div style="text-align:center;padding:14px;background:rgba(14,163,212,.06);border-radius:8px;border:1px solid rgba(14,163,212,.15);">
+        <div style="font-family:var(--font-display);font-size:20px;font-weight:800;color:var(--accent2);">18.3%</div>
+        <div class="text-sm text-muted">Margen bruto blended año 1</div>
+      </div>
+      <div style="text-align:center;padding:14px;background:rgba(245,166,35,.06);border-radius:8px;border:1px solid rgba(245,166,35,.15);">
+        <div style="font-family:var(--font-display);font-size:20px;font-weight:800;color:var(--accent3);">77.5%</div>
+        <div class="text-sm text-muted">Pago al host (split automático Wompi)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title"><div class="dot"></div>Aliados estratégicos clave</div>
+    <div class="grid-3" style="gap:10px;margin-top:4px;">
+      <div class="text-sm" style="padding:10px;background:rgba(255,255,255,.03);border-radius:6px;">🏗️ <strong>Witrey</strong> — desarrollo app (MVP iOS/Android/backend)</div>
+      <div class="text-sm" style="padding:10px;background:rgba(255,255,255,.03);border-radius:6px;">💳 <strong>Wompi</strong> — pasarela de pagos 2.65% + $700/transacción</div>
+      <div class="text-sm" style="padding:10px;background:rgba(255,255,255,.03);border-radius:6px;">🗺️ <strong>Google Maps Platform</strong> — mapas y geolocalización</div>
+      <div class="text-sm" style="padding:10px;background:rgba(255,255,255,.03);border-radius:6px;">☁️ <strong>AWS / GCP / Azure</strong> — infraestructura cloud escalable</div>
+      <div class="text-sm" style="padding:10px;background:rgba(255,255,255,.03);border-radius:6px;">🤖 <strong>Freshworks</strong> — chatbot de soporte ($25 USD/mes)</div>
+      <div class="text-sm" style="padding:10px;background:rgba(255,255,255,.03);border-radius:6px;">🛡️ <strong>AXA Colpatria / Chubb</strong> — póliza RC extracontractual</div>
+      <div class="text-sm" style="padding:10px;background:rgba(255,255,255,.03);border-radius:6px;">🏢 <strong>PH aliadas</strong> — inventario inicial en Chapinero y Usaquén</div>
+      <div class="text-sm" style="padding:10px;background:rgba(255,255,255,.03);border-radius:6px;">🔍 <strong>Truora</strong> — verificación avanzada de identidad (+200 hosts)</div>
+      <div class="text-sm" style="padding:10px;background:rgba(255,255,255,.03);border-radius:6px;">📊 <strong>HubSpot / Firebase</strong> — CRM y analítica de producto</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MARKETING ==================== -->
+<div class="page" id="page-marketing">
+  <div class="page-header">
+    <h1>Plan de Marketing</h1>
+    <p>Estrategia de adquisición escalonada: primero oferta (hosts), luego demanda (conductores).</p>
+  </div>
+
+  <div class="grid-3 mb-16">
+    <div class="card">
+      <div class="card-title">CAC conductor lanzamiento</div>
+      <div class="kpi-val orange">$7,400</div>
+      <div class="kpi-sub">COP — objetivo año 1</div>
+    </div>
+    <div class="card">
+      <div class="card-title">CAC conductor año 5</div>
+      <div class="kpi-val green">$3,900</div>
+      <div class="kpi-sub">COP — con referidos orgánicos</div>
+    </div>
+    <div class="card">
+      <div class="card-title">ROMI positivo</div>
+      <div class="kpi-val blue">Año 1</div>
+      <div class="kpi-sub">Cierre del primer año</div>
+    </div>
+  </div>
+
+  <div class="grid-2 mb-16">
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Marketing Mix — Conductores</div>
+      <div class="info-row"><span class="info-label">Producto</span><span class="info-val" style="max-width:55%;text-align:right;">Reserva con mapa real, precios visibles, QR, pago digital</span></div>
+      <div class="info-row"><span class="info-label">Precio base</span><span class="info-val">$8,000 COP/hora</span></div>
+      <div class="info-row"><span class="info-label">Tarifa de servicio</span><span class="info-val">$800 (M4) → $1,200 (M7)</span></div>
+      <div class="info-row"><span class="info-label">Canales</span><span class="info-val">Google Maps, Meta Ads, TikTok</span></div>
+      <div class="info-row"><span class="info-label">Mensaje</span><span class="info-val" style="max-width:55%;text-align:right;color:var(--accent);">"Deja de rodear. Reserva tu parqueo antes de salir."</span></div>
+    </div>
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Marketing Mix — Hosts</div>
+      <div class="info-row"><span class="info-label">Producto</span><span class="info-val" style="max-width:55%;text-align:right;">Panel de control, métricas de ocupación, pago automático</span></div>
+      <div class="info-row"><span class="info-label">Ingresos host</span><span class="info-val">77.5% de cada reserva</span></div>
+      <div class="info-row"><span class="info-label">Cargo verificación</span><span class="info-val">$3,500 COP (1ra reserva)</span></div>
+      <div class="info-row"><span class="info-label">Canales</span><span class="info-val">Outreach PH, LinkedIn, referidos</span></div>
+      <div class="info-row"><span class="info-label">Mensaje</span><span class="info-val" style="max-width:55%;text-align:right;color:var(--accent2);">"Tu cupo vacío tiene valor. Empieza a cobrarlo hoy."</span></div>
+    </div>
+  </div>
+
+  <div class="card mb-16">
+    <div class="section-title"><div class="dot"></div>Presupuesto de marketing (COP)</div>
+    <table class="data-table">
+      <thead><tr><th>Fase</th><th>Período</th><th>Meta Ads</th><th>Google Ads/ASO</th><th>Activaciones físicas</th><th>WhatsApp/email</th><th>Total anual</th></tr></thead>
+      <tbody>
+        <tr><td>Prelanzamiento</td><td>Mes -2 a 0</td><td>—</td><td>—</td><td>$750K</td><td>$150K</td><td><strong>~$1.8M</strong></td></tr>
+        <tr><td>Año 1 — Lanzamiento</td><td>Mes 1–3</td><td>$1.5M</td><td>$800K</td><td>$1.2M</td><td>$200K</td><td><strong>~$11.1M</strong></td></tr>
+        <tr><td>Año 1 — Consolidación</td><td>Mes 4–12</td><td>$2.5M</td><td>$1.2M</td><td>$800K</td><td>$300K</td><td><strong>~$43.2M</strong></td></tr>
+        <tr><td>Año 2 — Bogotá completa</td><td>Mes 13–24</td><td>$4.0M</td><td>$2.0M</td><td>$1.5M</td><td>$500K</td><td><strong>~$96M</strong></td></tr>
+        <tr><td>Año 3 — Bogotá + Medellín</td><td>Mes 25–36</td><td>$6.0M</td><td>$3.0M</td><td>$2.5M</td><td>$800K</td><td><strong>~$147.6M</strong></td></tr>
+        <tr><td>Año 4 — 4 ciudades</td><td>Mes 37–48</td><td>$9.0M</td><td>$5.0M</td><td>$4.0M</td><td>$1.2M</td><td><strong>~$230.4M</strong></td></tr>
+        <tr><td>Año 5 — 5 ciudades</td><td>Mes 49–60</td><td>$13M</td><td>$7.0M</td><td>$5.5M</td><td>$1.8M</td><td><strong>~$327.6M</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="section-title"><div class="dot"></div>Plan de expansión geográfica</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:#8da0b3;"></div>
+        <div class="timeline-phase">Fase 0 — Mes -2 a 0</div>
+        <div class="timeline-title">Prelanzamiento</div>
+        <div class="timeline-desc">Contratos con dueños de parqueaderos en Chapinero y Usaquén. Campaña de registros anticipados. Desarrollo MVP con Witrey.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-phase">Etapa 1 — Año 1–2</div>
+        <div class="timeline-title">Bogotá — Microzonas iniciales</div>
+        <div class="timeline-desc">Lanzamiento en Chapinero y Usaquén. Introducción suscripción AparkPass (mes 9). Alianzas B2B. Expansión a Suba, Teusaquillo y Centro.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:var(--accent2);"></div>
+        <div class="timeline-phase">Etapa 2 — Año 3–4</div>
+        <div class="timeline-title">Expansión Nacional</div>
+        <div class="timeline-desc">Año 3: Medellín (El Poblado / Laureles). Año 4: 3ra ciudad colombiana. Implementación panel SaaS para operadores formales.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:var(--accent3);"></div>
+        <div class="timeline-phase">Etapa 3 — Año 5+</div>
+        <div class="timeline-title">Internacionalización</div>
+        <div class="timeline-desc">Presencia en Barranquilla, Bucaramanga, Pereira. Exploración: Ciudad de México, Lima, Santiago de Chile.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== OPERACIONES ==================== -->
+<div class="page" id="page-operaciones">
+  <div class="page-header">
+    <h1>Plan de Producción y Logística</h1>
+    <p>Operación 100% digital. Sin planta física — infraestructura en la nube con escalabilidad automática.</p>
+  </div>
+
+  <div class="card mb-16">
+    <div class="section-title"><div class="dot"></div>Fases del proceso operativo</div>
+    <div class="grid-2" style="gap:12px;margin-top:4px;">
+      <div style="padding:14px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="background:var(--accent);color:#0a0f14;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;flex-shrink:0;">1</span><strong style="font-size:13px;">Desarrollo tecnológico (preop.)</strong></div>
+        <div class="text-sm text-muted">Externalizado a Witrey. F1: diseño UX/UI + prototipo Figma. F2: MVP completo iOS, Android y backend en la nube.</div>
+      </div>
+      <div style="padding:14px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="background:var(--accent2);color:#0a0f14;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;flex-shrink:0;">2</span><strong style="font-size:13px;">Onboarding de hosts</strong></div>
+        <div class="text-sm text-muted">100% digital. Cédula + selfie vía WhatsApp + consulta RUNT gratuita. Sin visitas físicas. Cargo verificación $3,500 en 1ra reserva.</div>
+      </div>
+      <div style="padding:14px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="background:var(--accent3);color:#0a0f14;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;flex-shrink:0;">3</span><strong style="font-size:13px;">Captación conductores</strong></div>
+        <div class="text-sm text-muted">Descarga app → registro → validación RUNT → vinculación método de pago → wallet digital con saldo mínimo de 1 reserva.</div>
+      </div>
+      <div style="padding:14px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="background:#c084fc;color:#0a0f14;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;flex-shrink:0;">4</span><strong style="font-size:13px;">Match & ejecución</strong></div>
+        <div class="text-sm text-muted">Algoritmo asigna cupos por proximidad, disponibilidad, reputación y precio. Check-in/check-out por QR. Split automático 77.5%/22.5%.</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;padding:14px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border);">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="background:#f86060;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;flex-shrink:0;">5</span><strong style="font-size:13px;">Soporte y control operativo</strong></div>
+      <div class="text-sm text-muted">Chatbot Freshworks para casos frecuentes. Escalado humano para disputas, fraudes y activación del fondo de garantía. Reputación bidireccional.</div>
+    </div>
+  </div>
+
+  <div class="grid-2 mb-16">
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Inversión preoperacional</div>
+      <table class="data-table">
+        <thead><tr><th>Concepto</th><th>Monto COP</th><th>Tipo</th></tr></thead>
+        <tbody>
+          <tr><td>App Witrey (F1 + F2 MVP completo)</td><td>$177,500,000</td><td><span class="badge badge-blue">Activo intangible</span></td></tr>
+          <tr><td>Constitución S.A.S. + registro marca SIC</td><td>$1,600,000</td><td><span class="badge badge-gray">Gasto preop.</span></td></tr>
+          <tr><td>Asesoría legal (T&C, contratos, privacidad)</td><td>$2,500,000</td><td><span class="badge badge-gray">Gasto preop.</span></td></tr>
+          <tr><td>Marketing preoperacional (mes -2 y -1)</td><td>$1,800,000</td><td><span class="badge badge-gray">Gasto preop.</span></td></tr>
+          <tr style="font-weight:600;"><td>TOTAL</td><td>$183,150,000</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Costos tecnológicos recurrentes</div>
+      <table class="data-table">
+        <thead><tr><th>Nivel</th><th>Transac./mes</th><th>Cloud</th><th>Google Maps</th><th>Chatbot</th></tr></thead>
+        <tbody>
+          <tr><td>Año 1</td><td>0–3K</td><td>$250K</td><td>$50K</td><td>$209K</td></tr>
+          <tr><td>Año 2</td><td>3K–8K</td><td>$500K</td><td>$400K</td><td>$290K</td></tr>
+          <tr><td>Año 3</td><td>8K–20K</td><td>$1.2M</td><td>$1.2M</td><td>$380K</td></tr>
+          <tr><td>Año 4</td><td>20K–50K</td><td>$3.0M</td><td>$3.5M</td><td>$530K</td></tr>
+          <tr><td>Año 5</td><td>50K+</td><td>$6.5M</td><td>$7.0M</td><td>$700K</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title"><div class="dot"></div>Proveedores clave seleccionados</div>
+    <div class="grid-2" style="gap:10px;margin-top:4px;">
+      <div class="info-row"><span class="info-label">Desarrollo app</span><span class="info-val">Witrey — cotización cerrada (F1+F2)</span></div>
+      <div class="info-row"><span class="info-label">Cloud</span><span class="info-val">AWS / GCP / Azure (créditos startup)</span></div>
+      <div class="info-row"><span class="info-label">Pasarela pagos</span><span class="info-val">Wompi — 2.65% + $700 COP fijo</span></div>
+      <div class="info-row"><span class="info-label">Mapas</span><span class="info-val">Google Maps Platform + caché 5K+ tx</span></div>
+      <div class="info-row"><span class="info-label">Soporte chatbot</span><span class="info-val">Freshworks — $25 USD/mes (plan Growth)</span></div>
+      <div class="info-row"><span class="info-label">Legal / contabilidad</span><span class="info-val">Freelance (Fase 1) → retainer desde Año 2</span></div>
+      <div class="info-row"><span class="info-label">Verificación identidad</span><span class="info-val">RUNT gratis → Truora $6,525/verif. (+200 hosts)</span></div>
+      <div class="info-row"><span class="info-label">Seguro RC</span><span class="info-val">AXA Colpatria o Chubb — $200K/mes</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== ORGANIZACIÓN ==================== -->
+<div class="page" id="page-organizacion">
+  <div class="page-header">
+    <h1>Plan Organizacional</h1>
+    <p>Misión, visión, estructura jurídica y evolución del equipo de AparkApp.</p>
+  </div>
+
+  <div class="grid-2 mb-16">
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Misión</div>
+      <div style="font-size:13px;line-height:1.7;color:var(--text2);font-style:italic;">"Conectar de forma segura, eficiente y transparente la oferta de espacios de estacionamiento ociosos con la demanda de conductores urbanos en Bogotá, generando valor económico para anfitriones y usuarios y contribuyendo a reducir la congestión vehicular."</div>
+    </div>
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Visión 2030</div>
+      <div style="font-size:13px;line-height:1.7;color:var(--text2);font-style:italic;">"Ser la plataforma líder de intermediación de estacionamiento urbano en Colombia, con presencia en las cinco principales ciudades del país y más de 100,000 transacciones mensuales."</div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+        <span class="tag tag-green">Confianza</span>
+        <span class="tag tag-blue">Innovación</span>
+        <span class="tag tag-orange">Sostenibilidad</span>
+        <span class="tag" style="background:rgba(192,132,252,.15);color:#c084fc;">Equidad</span>
+        <span class="tag tag-green">Integridad</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-16">
+    <div class="section-title"><div class="dot"></div>Evolución organizacional y nómina</div>
+    <table class="data-table">
+      <thead><tr><th>Fase</th><th>Período</th><th>Cargo incorporado</th><th>Honorario/Salario</th><th>Honorarios socios</th></tr></thead>
+      <tbody>
+        <tr><td>Fase 1</td><td>Mes 1 (2027)</td><td>5 socios + asesor contable/legal</td><td>$250K/socio + $400K asesor</td><td>$250K/socio</td></tr>
+        <tr><td>Fase 2</td><td>Mes 7 (2027)</td><td>Tech Lead (honorarios)</td><td>$3,000,000/mes</td><td>$250K/socio</td></tr>
+        <tr><td>Fase 3</td><td>Mes 15 (2028)</td><td>Ejecutivo Ventas Supply (nómina)</td><td>$3,000,000/mes</td><td>$1M/socio</td></tr>
+        <tr><td>Fase 3</td><td>Mes 19 (2028)</td><td>Agente Soporte al Cliente</td><td>$2,042,081 c/prestaciones</td><td>$1M/socio</td></tr>
+        <tr><td>Fase 4</td><td>Mes 25 (2029)</td><td>2do Ejecutivo Ventas (Medellín)</td><td>$3,165,000/mes</td><td>$1.5M/socio</td></tr>
+        <tr><td>Fase 4</td><td>Mes 35 (2030)</td><td>Community Manager</td><td>$3,500,000/mes</td><td>$1.5M/socio</td></tr>
+        <tr><td>Fase 5</td><td>Mes 49+ (2031)</td><td>Ejecutivos ventas 4ta/5ta ciudad</td><td>$3,472,796/mes c/u</td><td>$2M/socio</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Naturaleza jurídica</div>
+      <div class="info-row"><span class="info-label">Forma jurídica</span><span class="info-val"><span class="badge badge-green">S.A.S. — Ley 1258/2008</span></span></div>
+      <div class="info-row"><span class="info-label">Régimen fiscal</span><span class="info-val">Régimen Simple de Tributación (DIAN)</span></div>
+      <div class="info-row"><span class="info-label">Socios fundadores</span><span class="info-val">5 — 20% cada uno</span></div>
+      <div class="info-row"><span class="info-label">Registro SIC marca</span><span class="info-val">Incluido ($1.6M total)</span></div>
+      <div class="info-row"><span class="info-label">Asesoría legal inicial</span><span class="info-val">$800K – $1.5M COP</span></div>
+    </div>
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Costos de constitución estimados</div>
+      <div class="info-row"><span class="info-label">Formulario RUES</span><span class="info-val">$8,500</span></div>
+      <div class="info-row"><span class="info-label">Certificado existencia y rep. legal</span><span class="info-val">$12,100</span></div>
+      <div class="info-row"><span class="info-label">Inscripción de documentos</span><span class="info-val">~$69,000</span></div>
+      <div class="info-row"><span class="info-label">Matrícula mercantil</span><span class="info-val">Según activos</span></div>
+      <div class="info-row"><span class="info-label">Registro RUT</span><span class="info-val"><span class="badge badge-green">Gratuito</span></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== FINANZAS ==================== -->
+<div class="page" id="page-finanzas">
+  <div class="page-header">
+    <h1>Análisis Económico & Financiero</h1>
+    <p>Proyecciones 2026–2031. Punto de equilibrio en costos variables: mes 4.</p>
+  </div>
+
+  <div class="grid-4 mb-16">
+    <div class="card">
+      <div class="card-title">TIR 5 años</div>
+      <div class="kpi-val green">50.16%</div>
+      <div class="kpi-sub">vs WACC 19.3%</div>
+    </div>
+    <div class="card">
+      <div class="card-title">VPN 5 años</div>
+      <div class="kpi-val blue">$491M</div>
+      <div class="kpi-sub">COP</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Valor empresa 5Y</div>
+      <div class="kpi-val orange">$2.77B</div>
+      <div class="kpi-sub">COP — flujo descontado</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Ventas año 1</div>
+      <div class="kpi-val" style="color:#c084fc;">$404M</div>
+      <div class="kpi-sub">COP — 2027</div>
+    </div>
+  </div>
+
+  <div class="card mb-16">
+    <div class="section-title"><div class="dot"></div>Estado de resultados proyectado (COP millones)</div>
+    <div class="chart-wrap" style="height:240px;"><canvas id="chartPyL"></canvas></div>
+  </div>
+
+  <div class="grid-2 mb-16">
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Flujo de caja (COP millones)</div>
+      <div class="chart-wrap-sm"><canvas id="chartFlujo"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Indicadores financieros clave</div>
+      <table class="data-table">
+        <thead><tr><th>Indicador</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th></tr></thead>
+        <tbody>
+          <tr><td>Razón corriente</td><td>2.24x</td><td>2.46x</td><td>2.76x</td><td>2.67x</td><td>2.47x</td></tr>
+          <tr><td>Nivel endeud.</td><td>6.4%</td><td>24.9%</td><td>37.1%</td><td>40.7%</td><td>44.1%</td></tr>
+          <tr><td>Margen bruto</td><td>18.3%</td><td>18.3%</td><td>17.7%</td><td>15.9%</td><td>16.3%</td></tr>
+          <tr><td>Margen operativo</td><td>-18.8%</td><td>0.7%</td><td>4.3%</td><td>3.1%</td><td>4.8%</td></tr>
+          <tr><td>Margen neto</td><td>-18.8%</td><td>0.5%</td><td>2.7%</td><td>2.0%</td><td>3.1%</td></tr>
+          <tr><td>EBITDA (M COP)</td><td>-$18M</td><td>$79M</td><td>$231M</td><td>$252M</td><td>$464M</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid-2 mb-16">
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Costo de capital (WACC)</div>
+      <div class="info-row"><span class="info-label">Costo del equity (Re — CAPM)</span><span class="info-val">19.5%</span></div>
+      <div class="info-row"><span class="info-label">Costo de la deuda (Rd)</span><span class="info-val">25% E.A.</span></div>
+      <div class="info-row"><span class="info-label">Estructura E/V</span><span class="info-val">94.7%</span></div>
+      <div class="info-row"><span class="info-label">Estructura D/V</span><span class="info-val">5.3%</span></div>
+      <div class="info-row"><span class="info-label">Beta apalancado</span><span class="info-val">1.31</span></div>
+      <div class="info-row"><span class="info-label">Rf (TES Colombia 5Y)</span><span class="info-val">13.95%</span></div>
+      <div class="info-row"><span class="info-label"><strong>WACC</strong></span><span class="info-val"><strong style="color:var(--accent);">19.3%</strong></span></div>
+    </div>
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Estructura de financiación ($280M total)</div>
+      <div class="chart-wrap-sm"><canvas id="chartFinanc"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title"><div class="dot"></div>Política de dividendos</div>
+    <div class="grid-4" style="gap:12px;margin-top:4px;">
+      <div style="text-align:center;padding:14px;background:rgba(248,96,96,.06);border-radius:8px;border:1px solid rgba(248,96,96,.15);">
+        <div style="font-family:var(--font-display);font-size:18px;font-weight:800;color:#f86060;">100%</div>
+        <div class="text-sm text-muted">Retención — Años 1 y 2</div>
+        <div class="text-sm" style="color:#f86060;">0% dividendos</div>
+      </div>
+      <div style="text-align:center;padding:14px;background:rgba(245,166,35,.06);border-radius:8px;border:1px solid rgba(245,166,35,.15);">
+        <div style="font-family:var(--font-display);font-size:18px;font-weight:800;color:var(--accent3);">80%</div>
+        <div class="text-sm text-muted">Retención — Año 3</div>
+        <div class="text-sm" style="color:var(--accent3);">20% dividendos</div>
+      </div>
+      <div style="text-align:center;padding:14px;background:rgba(14,163,212,.06);border-radius:8px;border:1px solid rgba(14,163,212,.15);">
+        <div style="font-family:var(--font-display);font-size:18px;font-weight:800;color:var(--accent2);">70%</div>
+        <div class="text-sm text-muted">Retención — Año 4</div>
+        <div class="text-sm" style="color:var(--accent2);">30% dividendos</div>
+      </div>
+      <div style="text-align:center;padding:14px;background:rgba(34,208,122,.06);border-radius:8px;border:1px solid rgba(34,208,122,.15);">
+        <div style="font-family:var(--font-display);font-size:18px;font-weight:800;color:var(--accent);">60%</div>
+        <div class="text-sm text-muted">Retención — Año 5</div>
+        <div class="text-sm" style="color:var(--accent);">40% dividendos</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== RIESGOS ==================== -->
+<div class="page" id="page-riesgos">
+  <div class="page-header">
+    <h1>Plan de Riesgos</h1>
+    <p>Sistema de garantías, póliza RC y protocolos de contingencia operativa.</p>
+  </div>
+
+  <div class="grid-2 mb-16">
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Póliza RC — Seguro corporativo</div>
+      <div class="info-row"><span class="info-label">Aseguradoras</span><span class="info-val">AXA Colpatria / Chubb Colombia</span></div>
+      <div class="info-row"><span class="info-label">Tipo</span><span class="info-val">Responsabilidad Civil Extracontractual</span></div>
+      <div class="info-row"><span class="info-label">Cobertura</span><span class="info-val">Daños materiales, lesiones, defensa jurídica</span></div>
+      <div class="info-row"><span class="info-label">Costo estimado</span><span class="info-val">$200,000 COP/mes (fase inicial)</span></div>
+    </div>
+    <div class="card">
+      <div class="section-title"><div class="dot"></div>Fondo de garantías por transacción</div>
+      <div class="info-row"><span class="info-label">Aporte conductor</span><span class="info-val">$500 COP / reserva</span></div>
+      <div class="info-row"><span class="info-label">Aporte plataforma</span><span class="info-val">$300 COP (de su comisión)</span></div>
+      <div class="info-row"><span class="info-label">Protección conductor</span><span class="info-val">Hasta $500,000 COP / evento</span></div>
+      <div class="info-row"><span class="info-label">Protección host</span><span class="info-val">Hasta $300,000 COP / evento</span></div>
+      <div class="info-row"><span class="info-label">Margen neto fondo</span><span class="info-val"><span class="badge badge-green">$200 COP / transacción</span></span></div>
+    </div>
+  </div>
+
+  <div class="card mb-16">
+    <div class="section-title"><div class="dot"></div>Riesgos operativos y planes de contingencia</div>
+    <div class="risk-item high">
+      <div class="risk-label" style="color:#f86060;">🔴 ALTO — Cupo ocupado al momento de llegada</div>
+      <div class="risk-desc">Conductor reporta desde app → sistema busca espacio alternativo → sin disponibilidad = reembolso completo + compensación.</div>
+    </div>
+    <div class="risk-item high">
+      <div class="risk-label" style="color:#f86060;">🔴 ALTO — Baja adopción inicial (demanda)</div>
+      <div class="risk-desc">Riesgo limitante principal. Mitiga con marketing geolocalizado intensivo en Chapinero/Usaquén y programas de referidos.</div>
+    </div>
+    <div class="risk-item med">
+      <div class="risk-label" style="color:var(--accent3);">🟡 MEDIO — Retraso del conductor</div>
+      <div class="risk-desc">Ventana de tolerancia de 10-15 min. Vencido el tiempo → cupo liberado automáticamente + cargo por cancelación tardía.</div>
+    </div>
+    <div class="risk-item med">
+      <div class="risk-label" style="color:var(--accent3);">🟡 MEDIO — Cancelación del anfitrión</div>
+      <div class="risk-desc">Sistema reasigna cupo cercano. Si no hay disponibilidad → reembolso completo al conductor.</div>
+    </div>
+    <div class="risk-item med">
+      <div class="risk-label" style="color:var(--accent3);">🟡 MEDIO — Regulación de datos / SIC</div>
+      <div class="risk-desc">Cumplimiento desde diseño: T&C, política privacidad, asesoría legal especializada. SIC impuso $5.157M en multas en 2025.</div>
+    </div>
+    <div class="risk-item low">
+      <div class="risk-label" style="color:var(--accent);">🟢 BAJO — Falla tecnológica</div>
+      <div class="risk-desc">Código manual de respaldo o contacto directo con anfitrión. Infraestructura cloud con monitoreo continuo y servidores de respaldo.</div>
+    </div>
+    <div class="risk-item low">
+      <div class="risk-label" style="color:var(--accent);">🟢 BAJO — Daños al vehículo</div>
+      <div class="risk-desc">Reporte desde app → verificación por plataforma → activación fondo de garantía o póliza RC según el caso.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title"><div class="dot"></div>Riesgos macroeconómicos y estratégicos</div>
+    <div class="grid-2" style="gap:10px;margin-top:4px;">
+      <div style="padding:12px;background:rgba(248,96,96,.05);border:1px solid rgba(248,96,96,.1);border-radius:8px;">
+        <div style="font-size:12px;font-weight:700;color:#f86060;margin-bottom:4px;">Nuevos competidores entrantes</div>
+        <div class="text-sm text-muted">Plataformas consolidadas (Rappi, superapps) pueden replicar el modelo. Mitigación: mass crítica de hosts y marca local.</div>
+      </div>
+      <div style="padding:12px;background:rgba(245,166,35,.05);border:1px solid rgba(245,166,35,.1);border-radius:8px;">
+        <div style="font-size:12px;font-weight:700;color:var(--accent3);margin-bottom:4px;">Mejora de transporte público</div>
+        <div class="text-sm text-muted">Reducción del uso de vehículo particular en el mediano plazo. Horizonte moderado: TransMilenio no resuelve última milla.</div>
+      </div>
+      <div style="padding:12px;background:rgba(14,163,212,.05);border:1px solid rgba(14,163,212,.1);border-radius:8px;">
+        <div style="font-size:12px;font-weight:700;color:var(--accent2);margin-bottom:4px;">Inflación y alza de costos operativos</div>
+        <div class="text-sm text-muted">Salario mínimo +23.7% en 2026. Ajuste de tarifas y modelo variable (sin activos físicos) reduce exposición.</div>
+      </div>
+      <div style="padding:12px;background:rgba(34,208,122,.05);border:1px solid rgba(34,208,122,.1);border-radius:8px;">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:4px;">Dependencia tecnológica (Witrey)</div>
+        <div class="text-sm text-muted">Contrato con SLA definido. A partir del Año 2 se evalúa internalizar mantenimiento con Tech Lead.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// Navigation
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  // Re-init charts if needed
+  setTimeout(() => initCharts(), 50);
+}
+
+// Charts
+Chart.defaults.color = '#8da0b3';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.07)';
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+
+let chartsInitialized = false;
+function initCharts() {
+  if (chartsInitialized) return;
+  chartsInitialized = true;
+
+  const yrs = ['2026','2027','2028','2029','2030','2031'];
+
+  // Resumen: ingresos
+  const ctxRes = document.getElementById('chartResumen');
+  if (ctxRes) new Chart(ctxRes, {
+    type: 'bar',
+    data: {
+      labels: yrs,
+      datasets: [
+        { label: 'Ventas netas (M COP)', data: [0,404,1823,3528,5181,7467], backgroundColor: 'rgba(34,208,122,.7)', borderRadius: 6 },
+        { label: 'Utilidad neta (M COP)', data: [-21,-76,9,95,101,230], backgroundColor: 'rgba(14,163,212,.7)', borderRadius: 6 },
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { boxWidth: 12 } } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } } }
+  });
+
+  // Zonas donut
+  const ctxZ = document.getElementById('chartZonas');
+  if (ctxZ) new Chart(ctxZ, {
+    type: 'doughnut',
+    data: {
+      labels: ['Chapinero','Teusaquillo','Usaquén','Centro Hist.','Otras localidades'],
+      datasets: [{ data: [24.03,5.07,14.82,8.96,47.12], backgroundColor: ['#22d07a','#0ea3d4','#f5a623','#c084fc','rgba(255,255,255,0.15)'], borderWidth: 0, hoverOffset: 4 }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 10, padding: 12, font: { size: 11 } } } }, cutout: '65%' }
+  });
+
+  // P&L
+  const ctxPyL = document.getElementById('chartPyL');
+  if (ctxPyL) new Chart(ctxPyL, {
+    type: 'line',
+    data: {
+      labels: yrs,
+      datasets: [
+        { label: 'Ventas netas', data: [0,404,1823,3528,5181,7467], borderColor: '#22d07a', backgroundColor: 'rgba(34,208,122,.08)', fill: true, tension: .4, pointRadius: 4 },
+        { label: 'Utilidad bruta', data: [0,74,334,626,825,1220], borderColor: '#0ea3d4', backgroundColor: 'rgba(14,163,212,.05)', fill: true, tension: .4, pointRadius: 4 },
+        { label: 'EBIT', data: [-21,-76,13,153,161,358], borderColor: '#f5a623', backgroundColor: 'transparent', tension: .4, pointRadius: 4, borderDash: [4,3] },
+        { label: 'Utilidad neta', data: [-21,-76,9,95,101,230], borderColor: '#c084fc', backgroundColor: 'transparent', tension: .4, pointRadius: 4, borderDash: [2,3] },
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { boxWidth: 12, font: { size: 11 } } } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { callback: v => '$' + v + 'M' } }, x: { grid: { display: false } } } }
+  });
+
+  // Flujo de caja
+  const ctxFC = document.getElementById('chartFlujo');
+  if (ctxFC) new Chart(ctxFC, {
+    type: 'bar',
+    data: {
+      labels: yrs,
+      datasets: [
+        { label: 'Caja final (M COP)', data: [28,14,114,341,447,810], backgroundColor: ['rgba(34,208,122,.7)','rgba(248,96,96,.5)','rgba(34,208,122,.7)','rgba(34,208,122,.7)','rgba(34,208,122,.7)','rgba(34,208,122,.7)'], borderRadius: 6 },
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { callback: v => '$' + v + 'M' } }, x: { grid: { display: false } } } }
+  });
+
+  // Financiación pie
+  const ctxFin = document.getElementById('chartFinanc');
+  if (ctxFin) new Chart(ctxFin, {
+    type: 'doughnut',
+    data: {
+      labels: ['Equity socios (Mes 0)', 'Equity adicional (Mes 13)', 'Crédito comercial (Mes 26)'],
+      datasets: [{ data: [225,25,30], backgroundColor: ['#22d07a','#0ea3d4','#f5a623'], borderWidth: 0, hoverOffset: 4 }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 10, font: { size: 11 } } } }, cutout: '60%' }
+  });
+}
+
+<!-- ==================== SHARK TANK Q&A ==================== -->
+<div class="page" id="page-sharktank">
+  <div class="page-header">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <span class="tag tag-orange">🦈 Preparación Jurados</span>
+      <span class="tag tag-green">23 preguntas</span>
+    </div>
+    <h1>Shark Tank — Preguntas & Respuestas</h1>
+    <p>Preguntas clave que pueden hacer los jurados en logística, recursos humanos y marketing, con respuestas estructuradas: <strong style="color:var(--text);">dato concreto → razonamiento → contingencia.</strong></p>
+  </div>
+
+  <!-- Filters -->
+  <div class="st-filters">
+    <button class="st-filter-btn all active" onclick="filterQA('all', this)">Todas (23)</button>
+    <button class="st-filter-btn logistica" onclick="filterQA('logistica', this)">🚚 Logística (8)</button>
+    <button class="st-filter-btn rrhh" onclick="filterQA('rrhh', this)">👥 Recursos Humanos (6)</button>
+    <button class="st-filter-btn marketing" onclick="filterQA('marketing', this)">📣 Marketing (8)</button>
+    <button class="st-filter-btn trampa" onclick="filterQA('trampa', this)">🎯 Pregunta trampa (1)</button>
+  </div>
+
+  <!-- Search -->
+  <input class="st-search" type="text" id="stSearch" placeholder="🔍  Buscar pregunta o palabra clave..." oninput="searchQA(this.value)">
+
+  <div id="stEmpty" class="st-empty">No se encontraron preguntas con ese término.</div>
+
+  <!-- LOGÍSTICA -->
+  <div class="qa-group" data-cat="logistica">
+    <div class="qa-group-title" style="color:var(--accent2);">
+      <span>🚚</span> Logística & Operaciones
+    </div>
+
+    <div class="qa-item" data-cat="logistica" data-text="witrey incumple plan b mvp tarde retraso">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-log">Logística</span>
+          <span class="qa-q-text">¿Qué pasa si Witrey incumple o el MVP sale tarde? ¿Tienen un plan B?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        El contrato con Witrey está dividido en dos fases con <strong>entregables específicos y pagos condicionados a la entrega</strong>, no al tiempo. Si hay retraso en F2, la fase preoperacional — consolidar contratos con hosts — ya está en marcha y no depende del MVP terminado. Podemos avanzar la adquisición de oferta mientras el desarrollo se estabiliza.<br><br>
+        Si hay un incumplimiento grave, el contrato contempla penalidades y el prototipo en Figma nos permite contratar un segundo desarrollador con documentación ya hecha. <strong>No empezamos de cero.</strong>
+        <div class="qa-tip green">💡 Clave: la fase preop. de adquisición de hosts corre en paralelo al desarrollo, no en secuencia.</div>
+      </div></div>
+    </div>
+
+    <div class="qa-item" data-cat="logistica" data-text="externalizaron desarrollo tecnologia control cto">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-log">Logística</span>
+          <span class="qa-q-text">¿Por qué externalizaron el desarrollo si el producto ES la tecnología?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        Fue una decisión deliberada de capital, no de estrategia. Desarrollar internamente requeriría contratar un CTO desde el día uno a tasas de mercado de <strong>$2.2M–$4.8M USD al mes</strong>, lo que consumiría la mitad del capital inicial antes de tener una sola transacción.<br><br>
+        Witrey nos permite llegar al mercado con un MVP funcional a una fracción del costo. A partir del mes 7 incorporamos un Tech Lead que asume el mantenimiento, y desde el año 2 tenemos presupuestado internalizar el desarrollo progresivamente. <strong>Es externalización táctica para el lanzamiento, no un modelo permanente.</strong>
+        <div class="qa-tip green">💡 Clave: distinguir entre externalización táctica (fase 1) vs. internalización estratégica (año 2+).</div>
+      </div></div>
+    </div>
+
+    <div class="qa-item" data-cat="logistica" data-text="whatsapp informal verificar host fraude manual proceso">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-log">Logística</span>
+          <span class="qa-q-text">Verificar por WhatsApp suena informal. ¿Cómo garantizan que un host no fraude al conductor?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        El proceso tiene <strong>tres capas de validación</strong>: cédula, selfie y consulta gratuita al RUNT para verificar que el vehículo registrado corresponde al espacio declarado. No es solo WhatsApp — es un flujo estructurado.<br><br>
+        El cargo de verificación de $3,500 COP se cobra en la primera reserva completada, no en el registro, lo que <strong>filtra hosts que se registran pero nunca activan el espacio</strong>. El sistema de reputación bidireccional genera un historial que penaliza comportamientos fraudulentos con suspensión de cuenta. Para cuando superemos los 200 hosts activos, migramos a <strong>Truora</strong> — verificación automatizada con biometría.
+        <div class="qa-tip orange">⚠️ El proceso manual es apropiado para la escala inicial. La sofisticación crece con el volumen.</div>
+      </div></div>
+    </div>
+
+    <div class="qa-item" data-cat="logistica" data-text="tiempo activar host onboarding horas dias">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-log">Logística</span>
+          <span class="qa-q-text">¿Cuánto tiempo toma activar un host desde el primer contacto hasta la primera reserva?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        Estimamos entre <strong>48 y 72 horas</strong>. El primer día es el contacto, envío de documentos y consulta RUNT. El segundo día es la firma del contrato digital y configuración del espacio en la plataforma. La primera reserva depende de la demanda en la zona.<br><br>
+        En Chapinero y Usaquén — donde concentramos el lanzamiento — el SAM de conductores es el más alto de las cuatro zonas. El objetivo en los dos meses preoperacionales es tener <strong>25 hosts activos antes de abrir la app a conductores</strong>, para garantizar que el primer usuario tenga opciones reales disponibles.
+        <div class="qa-tip green">💡 Primero llenamos la góndola, después abrimos la tienda.</div>
+      </div></div>
+    </div>
+
+    <div class="qa-item" data-cat="logistica" data-text="negocio fuera plataforma bypass evasion comision">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-log">Logística</span>
+          <span class="qa-q-text">¿Cómo evitan que el negocio se haga por fuera de la plataforma?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        Tres mecanismos. <strong>Primero</strong>, el contrato digital incluye una cláusula de exclusividad con penalidad económica para transacciones originadas en la plataforma. <strong>Segundo</strong>, el historial de reputación del host tiene valor acumulado dentro de AparkApp — salirse significa perder ese activo. <strong>Tercero</strong>, el seguro integrado y el fondo de garantía solo aplican para reservas hechas a través de la plataforma.<br><br>
+        Si un conductor y un host hacen el trato por fuera, <strong>ninguno tiene cobertura ante un incidente</strong>. Ese riesgo asimétrico es un incentivo fuerte para quedarse dentro del sistema, especialmente para el conductor.
+        <div class="qa-tip green">💡 El seguro es el mejor incentivo para no saltar el sistema — no la cláusula contractual.</div>
+      </div></div>
+    </div>
+
+    <div class="qa-item" data-cat="logistica" data-text="retencion conductor churn desinstalar aparkpass fidelizacion">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-log">Logística</span>
+          <span class="qa-q-text">¿Cuál es su mecanismo de retención una vez el conductor prueba la app?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        La retención está diseñada en capas. En los primeros meses es la <strong>experiencia</strong>: reserva sin fricción, precio visible, QR en el lugar. Desde el mes 9 activamos <strong>AparkPass</strong> — la suscripción mensual a $9,900 que elimina la tarifa de servicio. Un usuario con 8+ reservas al mes ya está pagando más en tarifas de lo que cuesta la suscripción, así que la conversión es casi racional.<br><br>
+        El <strong>programa de referidos</strong> agrega un incentivo económico directo. Y el historial de reservas y calificaciones crea un costo de cambio real: moverse a un competidor significa empezar de cero en reputación.
+      </div></div>
+    </div>
+
+    <div class="qa-item" data-cat="logistica" data-text="cupo ocupado llegada incidente contingencia falla">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-log">Logística</span>
+          <span class="qa-q-text">¿Qué pasa si llego y el cupo está ocupado porque el host lo olvidó o lo usó?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        El conductor reporta la incidencia desde la app. El sistema busca un espacio alternativo cercano con características similares. Si no hay disponibilidad, se ejecuta el <strong>reembolso completo y una compensación adicional al conductor</strong> activada desde el fondo de garantía ($500 COP por reserva).<br><br>
+        Al host se le aplica una penalidad automática en su puntuación de reputación y en casos reiterados, suspensión de cuenta. La promesa "sabes dónde vas a parquear antes de salir" tiene que ser cumplible, y el mecanismo de penalización al host es lo que la hace creíble.
+        <div class="qa-tip red">⚠️ Este es el escenario de mayor riesgo para la reputación. La velocidad de respuesta es crítica.</div>
+      </div></div>
+    </div>
+
+    <div class="qa-item" data-cat="logistica" data-text="falla tecnologica bugs sistema caida servidor">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-log">Logística</span>
+          <span class="qa-q-text">¿Qué hacen si hay una falla tecnológica durante una reserva activa?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        Ante problemas con el acceso digital (QR o verificación de placa), el sistema habilita un <strong>código manual de respaldo</strong> o contacto directo con el anfitrión via la app. La infraestructura en la nube opera con monitoreo continuo y servidores de respaldo para minimizar interrupciones.<br><br>
+        El chatbot de Freshworks gestiona incidencias frecuentes en tiempo real, y los casos que requieren intervención humana se escalan al responsable de soporte. En la fase inicial, ese responsable es uno de los socios fundadores durante horario hábil.
+        <div class="qa-tip orange">⚠️ Ser transparentes sobre que en los primeros meses el soporte escalado tiene horario definido — no 24/7.</div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- RRHH -->
+  <div class="qa-group" data-cat="rrhh">
+    <div class="qa-group-title" style="color:#c084fc;">
+      <span>👥</span> Recursos Humanos
+    </div>
+
+    <div class="qa-item" data-cat="rrhh" data-text="250000 pesos salario bajo sostenible tiempo motivacion">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-rrhh">RRHH</span>
+          <span class="qa-q-text">$250,000 al mes por socio no alcanza para el transporte. ¿Cuánto tiempo pueden sostener eso?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        La compensación simbólica está diseñada para los primeros 6 meses y es sostenible porque los cinco socios somos estudiantes universitarios con gastos de vida cubiertos por otras fuentes. No tenemos hipotecas ni dependientes en este momento.<br><br>
+        Eso no es una debilidad — es una <strong>ventaja estructural de un equipo joven</strong>: podemos sacrificar ingresos a corto plazo porque el retorno real está en la participación accionaria. Cada uno tiene el 20% de una empresa proyectada en <strong>$2.77 billones de pesos al año 5</strong>. A partir del mes 15, cuando el proyecto genera su primera utilidad operativa positiva, los honorarios escalan a $1 millón mensual por socio.
+        <div class="qa-tip green">💡 Clave: el upside accionario es la compensación real. Nadie renuncia al 20% de algo que está creciendo.</div>
+      </div></div>
+    </div>
+
+    <div class="qa-item" data-cat="rrhh" data-text="socio trabajo formal dedicacion baja esfuerzo compromiso">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-rrhh">RRHH</span>
+          <span class="qa-q-text">¿Qué pasa si un socio consigue trabajo formal y baja el esfuerzo?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        Tenemos un pacto de socios en elaboración que incluye tres cláusulas clave: <strong>vesting de 3 años con cliff de 6 meses</strong> — un socio que salga antes del mes 6 no conserva su participación —, dedicación mínima semanal medible por entregables, y un mecanismo de recompra de acciones a precio justo si alguien decide salir.<br><br>
+        Más allá del contrato, los cinco llevamos trabajando juntos desde Proyecto Empresarial I y hemos tenido conversaciones explícitas sobre este riesgo. Los roles están asignados por fortaleza real, no por reparto político. La mejor garantía de compromiso es que todos entendemos que salir antes de que el proyecto escale significa <strong>perder el upside más importante</strong>.
+        <div class="qa-tip orange">⚠️ Mencionar el pacto de socios con términos específicos — no solo decir "tenemos un acuerdo".</div>
+      </div></div>
+    </div>
+
+    <div class="qa-item" data-cat="rrhh" data-text="nadie desarrollador supervisor witrey tecnico bugs cto">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-rrhh">RRHH</span>
+          <span class="qa-q-text">Ninguno es desarrollador. ¿Quién supervisa técnicamente a Witrey?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        Astrid, como CEO, gestiona el contrato y los entregables de Witrey con <strong>criterios funcionales definidos en los requerimientos</strong>: el prototipo en Figma es aprobado por el equipo antes de que empiece F2, y los criterios de aceptación del MVP están escritos en el contrato.<br><br>
+        Para la supervisión técnica específica, contamos con un asesor externo de tecnología que revisa los entregables sin costo en esta fase. No es lo mismo que tener un CTO interno, pero tampoco estamos ciegos. En el mes 7 entra el Tech Lead precisamente porque ya hay una plataforma en producción que necesita ojos técnicos permanentes.
+        <div class="qa-tip green">💡 Ser transparentes: no tenemos CTO interno en fase 1 — pero tenemos criterios de aceptación escritos y un asesor técnico.</div>
+      </div></div>
+    </div>
+
+    <div class="qa-item" data-cat="rrhh" data-text="pacto socios vesting contrato salida acuerdo fundadores">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-rrhh">RRHH</span>
+          <span class="qa-q-text">¿Tienen pacto de socios firmado? ¿Cláusula de vesting?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        El pacto de socios está en proceso de firma como parte de la constitución de la S.A.S. Sí contemplamos <strong>vesting con cliff de 6 meses y período total de 3 años</strong>. También incluye right of first refusal — si un socio quiere vender su participación, los demás tienen prioridad de compra antes que un tercero.<br><br>
+        Para resolver el posible empate en decisiones entre 5 socios con 20% igual, los estatutos definen un mecanismo de desempate que no paraliza la operación. Estas conversaciones las hemos tenido explícitamente porque <strong>la mayoría de los emprendimientos no mueren por el mercado sino por los desacuerdos internos</strong>.
+        <div class="qa-tip green">💡 Demostrar que conocen el riesgo y que ya tiene estructura para manejarlo genera más confianza que decir "somos un gran equipo".</div>
+      </div></div>
+    </div>
+
+    <div class="qa-item" data-cat="rrhh" data-text="medellin expansion contratan locales traslado equipo ciudad">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-rrhh">RRHH</span>
+          <span class="qa-q-text">Para Medellín en el año 3, ¿contratan locales o trasladan al equipo?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        <strong>Contratamos locales, siempre.</strong> La expansión a Medellín sigue el mismo playbook de Bogotá pero con un Ejecutivo de Ventas Supply local que conoce el tejido de propiedades horizontales en El Poblado y Laureles. Trasladar a un fundador de Bogotá a Medellín solo para supervisar sería ineficiente y crearía un hueco en la operación original.<br><br>
+        Lo que sí se replica es el <strong>modelo operativo documentado</strong>: procesos de onboarding, contratos tipo, formación en la plataforma y estrategia de activación de microzonas. Para el año 3 esos procesos ya están probados y estandarizados en Bogotá. La localidad es de ejecución, la estandarización es del sistema.
+      </div></div>
+    </div>
+
+    <div class="qa-item" data-cat="rrhh" data-text="tech lead mes 7 primeros bugs mantenimiento meses iniciales quien resuelve">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-rrhh">RRHH</span>
+          <span class="qa-q-text">El Tech Lead entra en el mes 7. ¿Quién resuelve los bugs en los primeros 6 meses?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        Witrey tiene un contrato de mantenimiento post-lanzamiento que cubre los primeros 6 meses de operación. Los bugs críticos que afecten transacciones activas tienen un SLA de resolución de 24 horas definido en el contrato. Los bugs no críticos se agrupan en sprints de actualización mensuales.<br><br>
+        El Tech Lead entra en el mes 7 porque en ese punto la plataforma ya tiene suficiente historial de uso real para definir las prioridades de desarrollo con evidencia. Entrar antes sería contratar a alguien para mantener código que aún está siendo probado por el mercado. <strong>El timing es deliberado, no un descuido.</strong>
+        <div class="qa-tip orange">⚠️ Tener claro el SLA del contrato de mantenimiento con Witrey antes de la presentación.</div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- MARKETING -->
+  <div class="qa-group" data-cat="marketing">
+    <div class="qa-group-title" style="color:var(--accent3);">
+      <span>📣</span> Marketing
+    </div>
+
+    <div class="qa-item" data-cat="marketing" data-text="ltv cac unit economics retorno por usuario calculos">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-mkt">Marketing</span>
+          <span class="qa-q-text">Muestren el LTV vs CAC explícitamente.</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        Con un precio promedio de $20,000 COP por reserva y comisión del 22.5%, el ingreso bruto es $4,500 COP / transacción. Un conductor con frecuencia conservadora de 8 reservas al mes genera <strong>$432,000 COP al año a la plataforma</strong>. Con un churn del 20% anual, el LTV a 3 años es de aproximadamente <strong>$1,080,000 COP por conductor</strong>.<br><br>
+        Frente a un CAC de $7,400 COP en el lanzamiento, la relación <strong>LTV/CAC es de ~146 a 1</strong>. Incluso con supuestos más conservadores de 4 reservas al mes, el LTV supera 70 veces el CAC. La economía unitaria es sólida en cualquier escenario razonable.
+        <div class="qa-tip green">💡 Siempre presentar el LTV con supuesto de frecuencia explícito. Los jurados van a preguntar cuántas veces al mes usa realmente un conductor la app.</div>
+      </div></div>
+    </div>
+
+    <div class="qa-item" data-cat="marketing" data-text="cac 7400 optimista benchmark referencia real datos">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-mkt">Marketing</span>
+          <span class="qa-q-text">El CAC de $7,400 COP suena muy optimista. ¿En qué benchmarks se basan?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        El referente más cercano es Rappi en sus primeros meses en Bogotá, donde reportó CACs entre $8,000 y $15,000 COP con campañas masivas. Nosotros somos más baratos porque somos <strong>hiperlocaliz ados</strong>: no hacemos campañas nacionales, hacemos campañas en un radio de 2 km en Chapinero y Usaquén, donde el CPC en Meta Ads para audiencias de movilidad está entre <strong>$180 y $300 COP</strong> según benchmarks de 2025.<br><br>
+        Con $1.5M mensuales en Meta Ads y un conversion rate conservador del 2%, llegamos a 100–150 conductores nuevos al mes. Eso da un CAC de $10,000 en el escenario pesimista — aún dentro de rango saludable frente al LTV. <strong>El $7,400 es el objetivo, no el supuesto base.</strong>
+        <div class="qa-tip orange">⚠️ Tener el número del escenario pesimista listo ($10,000 COP) — demuestra que analizaron el rango, no solo el mejor caso.</div>
+      </div></div>
+    </div>
+
+    <div class="qa-item" data-cat="marketing" data-text="circulo marketplace dos lados hosts conductores gallina huevo">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-mkt">Marketing</span>
+          <span class="qa-q-text">Sin hosts no hay conductores, sin conductores no hay hosts. ¿Cómo rompen ese círculo en las primeras semanas?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        Con <strong>secuenciación deliberada</strong>. Los dos meses preoperacionales están dedicados exclusivamente a oferta — no abrimos la app a conductores hasta tener 25 hosts activos. Ese número no es arbitrario: con 25 hosts distribuidos en Chapinero y Usaquén, cada conductor que busque en esas zonas ve al menos 3 opciones disponibles en su radio habitual.<br><br>
+        Por debajo de ese umbral, la experiencia del primer conductor sería mala y el daño de reputación sería <strong>irreversible</strong>. Para activar los primeros hosts usamos outreach directo en PH — no publicidad — porque tiene un costo de adquisición casi cero y un rate de conversión mucho más alto que cualquier campaña digital.
+        <div class="qa-tip green">💡 "Primero llenamos la góndola, después abrimos la tienda." Esta frase resume la estrategia perfectamente.</div>
+      </div></div>
+    </div>
+
+    <div class="qa-item" data-cat="marketing" data-text="nidoo wheelshouse competidores similares ya existen diferencia porque preferir">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-mkt">Marketing</span>
+          <span class="qa-q-text">Nidoo y WheelsHouse ya existen en Bogotá. ¿Por qué los preferirían a ustedes?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        Nidoo está orientado a jornadas largas y mensualidades — su propuesta es el DayPass y el plan mensual, no la reserva por hora para el conductor que necesita 2 horas en una cita médica. WheelsHouse tiene el concepto correcto pero tiene <strong>baja liquidez</strong>: pocos hosts activos significa que el conductor llega y no hay disponibilidad real.<br><br>
+        Nos diferenciamos en tres cosas concretas: primero, foco en <strong>reservas cortas bajo demanda</strong>, que ninguno atiende bien. Segundo, tenemos <strong>seguro integrado desde la primera transacción</strong> — ellos no. Tercero, nuestro onboarding de hosts es más simple y el split automático via Wompi es inmediato. No tenemos que convencer al mercado de que existe el problema — <strong>Nidoo y WheelsHouse ya hicieron esa tarea.</strong>
+      </div></div>
+    </div>
+
+    <div class="qa-item" data-cat="marketing" data-text="traccion datos usuarios reales prototipo encuestas validacion">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-mkt">Marketing</span>
+          <span class="qa-q-text">¿Tienen datos de usuarios reales que hayan probado el prototipo?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        Tenemos el prototipo de alta fidelidad en Figma con el que realizamos sesiones de validación con conductores y propietarios de PH en Chapinero y Usaquén. Los resultados muestran <strong>alta intención de uso</strong>, especialmente entre personas que trabajan en zonas de alta congestión y actualmente pagan parqueadero informal.<br><br>
+        También tenemos compromisos formales de interés de <strong>3 administraciones de PH</strong> para activar sus cupos al lanzamiento. No son contratos firmados todavía, pero son conversaciones avanzadas con personas reales que conocen el problema de primera mano porque lo viven todos los días.
+        <div class="qa-tip orange">⚠️ Ser honestos: "compromisos de interés" ≠ contratos firmados. Los jurados aprecian la honestidad más que inflar la tracción.</div>
+      </div></div>
+    </div>
+
+    <div class="qa-item" data-cat="marketing" data-text="tiktok quien gestiona redes sociales tiempo recursos equipo">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-mkt">Marketing</span>
+          <span class="qa-q-text">¿Quién gestiona TikTok si todos los socios están ocupados en todo lo demás?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        Laura, como Head of Demand, tiene la responsabilidad del contenido orgánico. La ventaja de TikTok para nuestro caso es que el contenido más efectivo <strong>no es producción costosa</strong> — es contenido situacional: grabar la búsqueda de parqueo en tiempo real, mostrar el antes y el después de usar la app, documentar el onboarding del primer host. Ese tipo de contenido lo puede producir cualquier miembro del equipo con un celular en 20 minutos.<br><br>
+        No estamos compitiendo con una agencia de medios — estamos construyendo una comunidad. Si en algún momento el volumen lo requiere, el <strong>Community Manager entra en el mes 35</strong>, cuando el presupuesto lo justifica.
+      </div></div>
+    </div>
+
+    <div class="qa-item" data-cat="marketing" data-text="meta google ads no convierte plan b contingencia canal alternativo">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-mkt">Marketing</span>
+          <span class="qa-q-text">¿Qué hacen si Meta y Google Ads no convierten al CAC esperado?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        El plan B está activado desde el mes 1 en paralelo: <strong>activaciones físicas en edificios</strong> con alto tráfico, alianzas con clínicas y universidades en las zonas objetivo, y el programa de referidos que convierte a cada conductor activo en un canal de adquisición.<br><br>
+        Si el CAC digital supera el umbral en el mes 2, reasignamos el presupuesto hacia activaciones físicas y outreach directo — que históricamente tienen conversion rates más altos en modelos de marketplace local. La señal de alerta está definida: <strong>si al mes 3 no alcanzamos el 50% del SOM conservador de transacciones</strong>, hacemos una revisión completa antes de escalar el presupuesto.
+        <div class="qa-tip green">💡 Tener un trigger claro para el plan de contingencia (50% del SOM conservador al mes 3) es lo que diferencia una respuesta preparada de una improvisada.</div>
+      </div></div>
+    </div>
+
+    <div class="qa-item" data-cat="marketing" data-text="cuantos hosts minimos experiencia util conductor disponibilidad densidad">
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-mkt">Marketing</span>
+          <span class="qa-q-text">¿Cuántos hosts mínimos necesitan para que la experiencia del conductor sea útil?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        Hemos definido un umbral de densidad: <strong>mínimo 1 cupo disponible por cada 500 metros cuadrados</strong> en las zonas objetivo durante horas pico. Con el tamaño de Chapinero y Usaquén, eso se logra con 25 hosts bien distribuidos geográficamente.<br><br>
+        Lo validamos superponiendo el mapa de PH registradas en datos abiertos de Bogotá con el mapa de calor de viajes pagos de la Encuesta de Movilidad. No elegimos las zonas por intuición — las elegimos porque los datos muestran que ahí se concentra el <strong>23.85% del mercado de viajes con pago de estacionamiento</strong> de toda la ciudad.
+        <div class="qa-tip green">💡 El número 25 no es arbitrario — viene de un cálculo de densidad geoespacial. Esto demuestra rigor metodológico.</div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- TRAMPA -->
+  <div class="qa-group" data-cat="trampa">
+    <div class="qa-group-title" style="color:#f86060;">
+      <span>🎯</span> La Pregunta Trampa
+    </div>
+
+    <div class="qa-item" data-cat="trampa" data-text="hosts firmados reservas procesadas traccion real hoy cuantos">
+      <div class="qa-question" onclick="toggleQA(this)" style="border-left: 3px solid #f86060;">
+        <div style="display:flex;align-items:flex-start;gap:10px;flex:1;">
+          <span class="cat-badge cat-trp">Trampa</span>
+          <span class="qa-q-text">Llevan meses trabajando en esto. ¿Cuántos hosts tienen hoy firmados y cuántas reservas reales han procesado?</span>
+        </div>
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner">
+        Esta es la pregunta más importante de toda la presentación. Hay dos versiones según la situación real del equipo:
+        <br><br>
+        <strong style="color:var(--accent);">✅ Si tienen tracción:</strong><br>
+        <span style="display:block;margin:8px 0 12px;padding:10px 14px;background:rgba(34,208,122,.06);border-radius:6px;border-left:3px solid var(--accent);">"Hoy tenemos X hosts con contrato digital firmado en Chapinero y Usaquén, y hemos procesado X reservas de prueba con el prototipo funcional. Los números son pequeños porque intencionalmente no hemos abierto la plataforma al público — estamos esperando tener la masa crítica de oferta antes de activar la demanda. Pero la señal más importante no es el volumen, es la calidad: los hosts que tenemos firmados son administraciones de PH reales, no amigos del equipo."</span>
+
+        <strong style="color:var(--accent3);">⚠️ Si aún no tienen tracción concreta:</strong><br>
+        <span style="display:block;margin:8px 0 12px;padding:10px 14px;background:rgba(245,166,35,.06);border-radius:6px;border-left:3px solid var(--accent3);">"Aún no hemos procesado reservas reales porque el MVP está en desarrollo con Witrey. Lo que sí tenemos son tres administraciones de PH con intención formal de activar sus cupos al lanzamiento, validaciones de prototipo con conductores reales que muestran alta intención de uso, y los dos meses preoperacionales están diseñados específicamente para convertir esas intenciones en contratos firmados antes del día 1. Sabemos que esto es lo que están buscando — y es exactamente lo que estamos construyendo ahora."</span>
+
+        <div class="qa-tip red">🎯 Regla de oro: NUNCA mentir sobre la tracción. Los jurados con experiencia detectan la inflación de métricas de inmediato — y eso destruye la credibilidad de todo lo demás. La honestidad con un plan claro es más poderosa que números inflados.</div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- Tip general -->
+  <div style="margin-top:12px;padding:18px 20px;background:rgba(34,208,122,.05);border:1px solid rgba(34,208,122,.2);border-radius:var(--radius);">
+    <div style="font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--accent);margin-bottom:8px;">💡 Estructura de respuesta recomendada para cada pregunta</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;">
+      <div style="flex:1;min-width:200px;padding:12px;background:rgba(255,255,255,.03);border-radius:8px;text-align:center;">
+        <div style="font-size:20px;margin-bottom:4px;">1️⃣</div>
+        <div style="font-size:12px;font-weight:700;margin-bottom:4px;">Dato concreto</div>
+        <div style="font-size:11px;color:var(--text2);">Número, fuente o hecho verificable que ancla la respuesta</div>
+      </div>
+      <div style="flex:1;min-width:200px;padding:12px;background:rgba(255,255,255,.03);border-radius:8px;text-align:center;">
+        <div style="font-size:20px;margin-bottom:4px;">2️⃣</div>
+        <div style="font-size:12px;font-weight:700;margin-bottom:4px;">Razonamiento</div>
+        <div style="font-size:11px;color:var(--text2);">Por qué ese dato soporta la decisión que tomaron</div>
+      </div>
+      <div style="flex:1;min-width:200px;padding:12px;background:rgba(255,255,255,.03);border-radius:8px;text-align:center;">
+        <div style="font-size:20px;margin-bottom:4px;">3️⃣</div>
+        <div style="font-size:12px;font-weight:700;margin-bottom:4px;">Contingencia</div>
+        <div style="font-size:11px;color:var(--text2);">Qué pasa si el supuesto falla y cómo están preparados</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// Navigation
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  setTimeout(() => initCharts(), 50);
+}
+
+// Accordion
+function toggleQA(el) {
+  const item = el.closest('.qa-item');
+  const isOpen = item.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.qa-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// Filter by category
+function filterQA(cat, btn) {
+  document.querySelectorAll('.st-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('stSearch').value = '';
+
+  const items = document.querySelectorAll('.qa-item');
+  const groups = document.querySelectorAll('.qa-group');
+
+  items.forEach(item => {
+    item.style.display = (cat === 'all' || item.dataset.cat === cat) ? '' : 'none';
+  });
+
+  groups.forEach(group => {
+    const visible = [...group.querySelectorAll('.qa-item')].some(i => i.style.display !== 'none');
+    group.style.display = visible ? '' : 'none';
+  });
+
+  document.getElementById('stEmpty').style.display = 'none';
+}
+
+// Search
+function searchQA(val) {
+  const q = val.toLowerCase().trim();
+  // Reset filter buttons
+  document.querySelectorAll('.st-filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.st-filter-btn.all').classList.add('active');
+
+  const items = document.querySelectorAll('.qa-item');
+  const groups = document.querySelectorAll('.qa-group');
+  let anyVisible = false;
+
+  items.forEach(item => {
+    const text = (item.dataset.text + ' ' + item.querySelector('.qa-q-text').textContent + ' ' + item.querySelector('.qa-answer-inner').textContent).toLowerCase();
+    const match = !q || text.includes(q);
+    item.style.display = match ? '' : 'none';
+    if (match) anyVisible = true;
+  });
+
+  groups.forEach(group => {
+    const visible = [...group.querySelectorAll('.qa-item')].some(i => i.style.display !== 'none');
+    group.style.display = visible ? '' : 'none';
+  });
+
+  document.getElementById('stEmpty').style.display = anyVisible ? 'none' : 'block';
+}
+
+// Charts
+Chart.defaults.color = '#8da0b3';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.07)';
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+
+let chartsInitialized = false;
+function initCharts() {
+  if (chartsInitialized) return;
+  chartsInitialized = true;
+
+  const yrs = ['2026','2027','2028','2029','2030','2031'];
+
+  const ctxRes = document.getElementById('chartResumen');
+  if (ctxRes) new Chart(ctxRes, {
+    type: 'bar',
+    data: {
+      labels: yrs,
+      datasets: [
+        { label: 'Ventas netas (M COP)', data: [0,404,1823,3528,5181,7467], backgroundColor: 'rgba(34,208,122,.7)', borderRadius: 6 },
+        { label: 'Utilidad neta (M COP)', data: [-21,-76,9,95,101,230], backgroundColor: 'rgba(14,163,212,.7)', borderRadius: 6 },
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { boxWidth: 12 } } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } } }
+  });
+
+  const ctxZ = document.getElementById('chartZonas');
+  if (ctxZ) new Chart(ctxZ, {
+    type: 'doughnut',
+    data: {
+      labels: ['Chapinero','Teusaquillo','Usaquén','Centro Hist.','Otras localidades'],
+      datasets: [{ data: [24.03,5.07,14.82,8.96,47.12], backgroundColor: ['#22d07a','#0ea3d4','#f5a623','#c084fc','rgba(255,255,255,0.15)'], borderWidth: 0, hoverOffset: 4 }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 10, padding: 12, font: { size: 11 } } } }, cutout: '65%' }
+  });
+
+  const ctxPyL = document.getElementById('chartPyL');
+  if (ctxPyL) new Chart(ctxPyL, {
+    type: 'line',
+    data: {
+      labels: yrs,
+      datasets: [
+        { label: 'Ventas netas', data: [0,404,1823,3528,5181,7467], borderColor: '#22d07a', backgroundColor: 'rgba(34,208,122,.08)', fill: true, tension: .4, pointRadius: 4 },
+        { label: 'Utilidad bruta', data: [0,74,334,626,825,1220], borderColor: '#0ea3d4', backgroundColor: 'rgba(14,163,212,.05)', fill: true, tension: .4, pointRadius: 4 },
+        { label: 'EBIT', data: [-21,-76,13,153,161,358], borderColor: '#f5a623', backgroundColor: 'transparent', tension: .4, pointRadius: 4, borderDash: [4,3] },
+        { label: 'Utilidad neta', data: [-21,-76,9,95,101,230], borderColor: '#c084fc', backgroundColor: 'transparent', tension: .4, pointRadius: 4, borderDash: [2,3] },
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { boxWidth: 12, font: { size: 11 } } } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { callback: v => '$' + v + 'M' } }, x: { grid: { display: false } } } }
+  });
+
+  const ctxFC = document.getElementById('chartFlujo');
+  if (ctxFC) new Chart(ctxFC, {
+    type: 'bar',
+    data: {
+      labels: yrs,
+      datasets: [
+        { label: 'Caja final (M COP)', data: [28,14,114,341,447,810], backgroundColor: ['rgba(34,208,122,.7)','rgba(248,96,96,.5)','rgba(34,208,122,.7)','rgba(34,208,122,.7)','rgba(34,208,122,.7)','rgba(34,208,122,.7)'], borderRadius: 6 },
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { callback: v => '$' + v + 'M' } }, x: { grid: { display: false } } } }
+  });
+
+  const ctxFin = document.getElementById('chartFinanc');
+  if (ctxFin) new Chart(ctxFin, {
+    type: 'doughnut',
+    data: {
+      labels: ['Equity socios (Mes 0)', 'Equity adicional (Mes 13)', 'Crédito comercial (Mes 26)'],
+      datasets: [{ data: [225,25,30], backgroundColor: ['#22d07a','#0ea3d4','#f5a623'], borderWidth: 0, hoverOffset: 4 }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 10, font: { size: 11 } } } }, cutout: '60%' }
+  });
+}
+
+setTimeout(initCharts, 200);
+</script>
+</body>
+</html>
